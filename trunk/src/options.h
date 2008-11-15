@@ -31,6 +31,8 @@ struct Directory {
 	{
 	
 	}
+    Directory(QString n, QStringList t, bool d, bool e, int dep) 
+    :  indexDirs(d), indexExe(e), name(n), types(t), depth(dep) {}
 	bool indexDirs;
 	bool indexExe;
 	QString name;
@@ -56,6 +58,7 @@ OptionsDlg(QWidget* parent = 0);
 QList<Directory> memDirs;
 QList<QPair<QString, uint> > pluginNames;
 QVBoxLayout* pluginLayout;
+ QString lastDir;
 
 public slots:
 	void accept();

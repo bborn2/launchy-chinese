@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef MAIN_H
 #define MAIN_H
 
+
+
 #include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
@@ -36,12 +38,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "icon_delegate.h"
 #include "globals.h"
 
+
+
+
+
 class QLineEditMenu : public QLineEdit
 {
 	Q_OBJECT
 public:
 	QLineEditMenu(QWidget* parent = 0) :
-	QLineEdit(parent) {}
+    QLineEdit(parent) {setAttribute(Qt::WA_InputMethodEnabled);}
 	void contextMenuEvent(QContextMenuEvent *evt) {
 		emit menuEvent(evt);
 	}
@@ -56,6 +62,7 @@ public:
 	QCharLineEdit(QWidget* parent = 0) : 
 		QLineEdit(parent) 
 		{
+		    setAttribute(Qt::WA_InputMethodEnabled);
 		}
 		void keyPressEvent(QKeyEvent* key) {
 			QLineEdit::keyPressEvent(key);
@@ -97,10 +104,15 @@ class QCharListWidget : public QListWidget
 {
 	Q_OBJECT
 public:
-	QCharListWidget(QWidget* parent = 0) : 
-		QListWidget(parent) 
+    QCharListWidget(QWidget* parent = 0) : 
+    QListWidget(NULL)
 		{
+		    parent = parent; // warning
+		    #ifdef Q_WS_X11
+		    setWindowFlags( windowFlags() |   Qt::Tool | Qt::SplashScreen);
+		    #endif
 			setAttribute(Qt::WA_AlwaysShowToolTips);
+			
 			setAlternatingRowColors(true);
 		}
 		void keyPressEvent(QKeyEvent* key) {
@@ -148,12 +160,14 @@ class MyWidget : public QWidget
 public:
 
 
-
-	MyWidget(QWidget *parent = 0);
+    MyWidget() {};
+    MyWidget(QWidget *parent, PlatformBase*, bool rescue );
 	~MyWidget();
+
+	QHash<QString, QList<QString> > dirs;
 	Fader* fader;
 	QPoint moveStartPoint;
-	PlatformImp platform;	
+	PlatformBase * platform;	
 	QLabel* label;
 	QLineEditMenu *output;
 	QCharLineEdit *input;
@@ -180,9 +194,8 @@ public:
 	IconDelegate* listDelegate;
 	QAbstractItemDelegate * defaultDelegate;
 
+	void connectAlpha();
 	QIcon getIcon(CatItem & item);
-	void mousePressEvent(QMouseEvent *e);
-	void mouseMoveEvent(QMouseEvent *e);
 	void MoveFromAlpha(QPoint pos);
 	void applySkin(QString);
 	void contextMenuEvent(QContextMenuEvent *event);
@@ -193,7 +206,7 @@ public:
 	void checkForUpdate();
 	void shouldDonate();
 	void setCondensed(int condensed);
-	void setHotkey(int, int);
+	bool setHotkey(int, int);
 	void showAlternatives(bool show=true);
 	void launchObject();
 	void searchFiles(const QString & input, QList<CatItem>& searchResults);
@@ -213,6 +226,7 @@ public:
 	QChar sepChar();
 	QString printInput();
 	void processKey();
+
 private:
     QHttp *http;
     QBuffer *verBuffer;
@@ -226,7 +240,9 @@ public slots:
 	void setAlwaysShow(bool);
 	void setAlwaysTop(bool);
 	void setPortable(bool);
-	void setSkin(QString);
+	void mousePressEvent(QMouseEvent *e);
+	void mouseMoveEvent(QMouseEvent *e);
+	void setSkin(QString, QString);
 	void httpGetFinished(bool result);
 	void catalogBuilt();
 	void inputMethodEvent(QInputMethodEvent* e);
@@ -238,6 +254,7 @@ public slots:
 	void setFadeLevel(double);
 	void finishedFade(double d);
 	void menuEvent(QContextMenuEvent*);
+	void buildCatalog();
 };
 
 #endif
