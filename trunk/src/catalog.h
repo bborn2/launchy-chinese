@@ -29,27 +29,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <QDir>
 #include <QSet>
 
-//#include <QByteArray>
-//#include <QTextCodec>
-//#include <QDebug>
 
-#ifdef WIN32
-	#include "Windows.h"
-#endif
-
-
+/** 
+\brief CatItem (Catalog Item) stores a single item in the index
+*/
 class CatItem {
 public:
-    int id;
+    
+	/** The full path of the indexed item */
 	QString fullPath;
+	/** The abbreviated name of the indexed item */
 	QString shortName;
+	/** The lowercase name of the indexed item */
 	QString lowName;
+	/** A path to an icon for the item */
 	QString icon;
+	/** How many times this item has been called by the user */
 	int usage;
+	/** This is unused, and meant for plugin writers and future extensions */
 	void* data;
-	
+	/** The plugin id of the creator of this CatItem */
+	int id;
 
 	CatItem() {}
+
 
 
 	CatItem(QString full, bool isDir = false) 
@@ -64,14 +67,7 @@ public:
 					shortName = shortName.mid(0,shortName.lastIndexOf("."));
 			}
 
-#ifdef WIN32
-
-			QString tempString;
-			tempString = shortName.toLower();
-			lowName = GetFirstLetter(tempString);
-#else
 			lowName = shortName.toLower();
-#endif
 			data = NULL;
 			usage = 0;
 			id = 0;
@@ -88,15 +84,22 @@ public:
 	}
 
 	CatItem(QString full, QString shortN, uint i_d) 
-		: id(i_d), fullPath(full), shortName(shortN)
+	    :  fullPath(full), shortName(shortN), id(i_d)
 	{
 		lowName = shortName.toLower();
 		data = NULL;
 		usage = 0;
 	}
-
+	/** This is the constructor most used by plugins 
+	\param full The full path of the file to execute
+	\param The abbreviated name for the entry
+	\param i_d Your plugin id (0 for Launchy itself)
+	\param iconPath The path to the icon for this entry
+	\warning It is usually a good idea to append ".your_plugin_name" to the end of the full parameter
+	so that there are not multiple items in the index with the same full path.
+	*/
 	CatItem(QString full, QString shortN, uint i_d, QString iconPath) 
-		: id(i_d), fullPath(full), shortName(shortN), icon(iconPath)
+	    : fullPath(full), shortName(shortN), icon(iconPath), id(i_d)
 	{
 		lowName = shortName.toLower();
 		data = NULL;
@@ -130,166 +133,60 @@ public:
 		return false;
 	}
 
-#ifdef WIN32
-
-	QString GetFirstLetter(QString shortName)
-	{
-		quint8 ucHigh = 0, ucLow = 0; 
-		int  nCode = 0;
-
-		char txt[1024];
-		wchar_t *pshortName = (wchar_t*) shortName.data();
-		WideCharToMultiByte( CP_ACP, 0, pshortName, -1, txt, 1024 , NULL, NULL );
-		char temptext[1024] = {0};
-		int k = 0;
-
-		char strRet;
-
-		for (int i=0; i< strlen(txt); i++)
-		{
-			if ( !IsDBCSLeadByteEx( 936 ,txt[i] ))
-			{
-				temptext[k++] = txt[i];
-				continue;
-			} 
-
-			ucHigh =  txt[i];
-			ucLow  =  txt[i+1];
-			if ( ucHigh < 0xa1 || ucLow < 0xa1)
-			{
-				temptext[k++] = txt[i];
-				continue;
-			}
-			else
-				// Treat code by section-position as an int type parameter, 
-				// so make following change to nCode. 
-				nCode = (ucHigh - 0xa0) * 100 + ucLow - 0xa0;
-			FirstLetter(nCode, strRet);
-			temptext[k++] = txt[i];
-			temptext[k++] = txt[i+1];
-			temptext[k++] = strRet;
-			//strcat_s(temptext,1024, txt+i);
-			//strcat_s(temptext,1024, txt+i+1);
-			//strcat_s(temptext,1024, &strRet);
-			i++;//one Chinese character need two bytes
-			 
-		}
-
-
-
-		//MultiByteToWideChar(936,0,txt + i,2, &_t ,1);
-		//strFirstLetter += _t;
-
-		//////////////////////////////////////////////////////////////////////////
-
-		//QTextCodec *ChineseCodec =QTextCodec::codecForName("GB2312");
-		//Q_CHECK_PTR(ChineseCodec);
-		//QByteArray text = ChineseCodec->fromUnicode(shortName);
-		//QByteArray temptext;
-
-		//QString strRet;
- 
-		//for (int i=0; i< text.length(); i++)
-		//{
-		//	ucHigh = text[i];
-		//	 
-		//	if ( ucHigh <  0xa1 )
-		//	{
-		//		temptext += text[i];
-		//		continue;
-		//	}
-		//	else
-		//	{
-		//		ucLow  =  text[i+1];
-
-		//		if ( ucHigh < 0xa1 || ucLow < 0xa1)
-		//		{
-		//			temptext += text[i];
-		//			continue;
-		//		}
-		//		else
-		//			nCode = (ucHigh - 0xa0) * 100 + ucLow - 0xa0;
-		//		FirstLetter(nCode, strRet);
-		//		temptext += text[i];
-		//		temptext += text[i+1];
-		//		temptext += strRet;
-		//		i++;
-		//		strRet = "";
-		//	}
-		//}
-
-		//wchar_t wtext[1024];
-		int len = MultiByteToWideChar(936,0,temptext ,strlen(temptext), NULL, 0);
-		wchar_t *pwText;
-		//QString t;
-		pwText = new wchar_t[len];
-		MultiByteToWideChar (936, 0, temptext ,strlen(temptext), pwText, len);
-
-		//t = QString::fromWCharArray(pwText);
-		QString t((const QChar*) pwText , len);
-
-	 
-		delete []pwText;
-		pwText = NULL;
-		 
-		return t;
-
-		//qDebug()<<ChineseCodec->toUnicode(temptext);
- 		//return ChineseCodec->toUnicode(temptext);
-		
-	}
-
-	void FirstLetter(int nCode, char &strLetter)
-	{
-		if(nCode >= 1601 && nCode < 1637) strLetter = 'a';
-		if(nCode >= 1637 && nCode < 1833) strLetter = 'b'; 
-		if(nCode >= 1833 && nCode < 2078) strLetter = 'c';
-		if(nCode >= 2078 && nCode < 2274) strLetter = 'd';
-		if(nCode >= 2274 && nCode < 2302) strLetter = 'e'; 
-		if(nCode >= 2302 && nCode < 2433) strLetter = 'f';
-		if(nCode >= 2433 && nCode < 2594) strLetter = 'g';
-		if(nCode >= 2594 && nCode < 2787) strLetter = 'h'; 
-		if(nCode >= 2787 && nCode < 3106) strLetter = 'j';
-		if(nCode >= 3106 && nCode < 3212) strLetter = 'k'; 
-		if(nCode >= 3212 && nCode < 3472) strLetter = 'l'; 
-		if(nCode >= 3472 && nCode < 3635) strLetter = 'm';
-		if(nCode >= 3635 && nCode < 3722) strLetter = 'n';
-		if(nCode >= 3722 && nCode < 3730) strLetter = 'o'; 
-		if(nCode >= 3730 && nCode < 3858) strLetter = 'p';
-		if(nCode >= 3858 && nCode < 4027) strLetter = 'q';
-		if(nCode >= 4027 && nCode < 4086) strLetter = 'r'; 
-		if(nCode >= 4086 && nCode < 4390) strLetter = 's';
-		if(nCode >= 4390 && nCode < 4558) strLetter = 't';
-		if(nCode >= 4558 && nCode < 4684) strLetter = 'w'; 
-		if(nCode >= 4684 && nCode < 4925) strLetter = 'x';
-		if(nCode >= 4925 && nCode < 5249) strLetter = 'y';
-		if(nCode >= 5249 && nCode < 5590) strLetter = 'z'; 
-	}
-
-#endif
-
 };
 
 
+/** InputData shows one segment (between tabs) of a user's query 
+	A user's query is typically represented by List<InputData>
+	and each element of the list represents a segment of the query.
 
+	E.g.  query = "google <tab> this is my search" will have 2 InputData segments
+	in the list.  One for "google" and one for "this is my search"
+*/
 class InputData 
 {
 private:
+	/** The user's entry */
 	QString text;
+	/** Any assigned labels to this query segment */
 	QSet<uint> labels;
+	/** A pointer to the best catalog match for this segment of the query */
 	CatItem topResult;
+	/** The plugin id of this query's owner */
 	uint id;
 public:
+	/** Get the labels applied to this query segment */
 	QSet<uint>  getLabels() { return labels; }
+	/** Apply a label to this query segment */
 	void setLabel(uint l) { labels.insert(l); }
+	/** Check if it has the given label applied to it */
 	bool hasLabel(uint l) { return labels.contains(l); }
 
+	/** Set the id of this query
+
+	This can be used to override the owner of the selected catalog item, so that 
+	no matter what item is chosen from the catalog, the given plugin will be the one
+	to execute it.
+
+	\param i The plugin id of the plugin to execute the query's best match from the catalog
+	*/
 	void setID(uint i) { id = i; }
+
+	/** Returns the current owner id of the query */
 	uint getID() { return id; }
+
+	/** Get the text of the query segment */
 	QString  getText() { return text; }
+
+	/** Set the text of the query segment */
 	void setText(QString t) { text = t; }
+
+	/** Get a pointer to the best catalog match for this segment of the query */
 	CatItem&  getTopResult() { return topResult; }
+
+	/** Change the best catalog match for this segment */
 	void setTopResult(CatItem sr) { topResult = sr; }
+
 	InputData() { id = 0; }
 	InputData(QString str) : text(str) { id = 0;}
 };
@@ -317,57 +214,7 @@ inline QDataStream &operator>>(QDataStream &in, CatItem &item) {
 	return in;
 }
 
-class Catalog {
-public:
-	Catalog() {}
-	virtual ~Catalog() {}
-	virtual void addItem(CatItem item) = 0;
-	virtual int count() = 0;
-	virtual const CatItem & getItem(int) = 0;
-	static bool matches(CatItem* item, QString& txt);
-
-	void searchCatalogs(QString, QList<CatItem> & );
-	virtual void incrementUsage(const CatItem& item) = 0;
-	virtual int getUsage(const QString& path) = 0;
-	void checkHistory(QString txt, QList<CatItem> & list);
-
-private:	
-	virtual QList<CatItem*> search(QString) = 0;
-
-};
 
 
-
-// The fast catalog searches quickly but 
-// addition of items is slow and uses a lot of memory
-class FastCatalog : public Catalog {
-private:
-	QList<CatItem> catList;
-	QHash<QChar, QList<CatItem*> > catIndex;
-public:
-	FastCatalog() : Catalog() {}
-	void addItem(CatItem item);
-	QList<CatItem*> search(QString);
-	int count() { return catList.count(); }
-	const CatItem & getItem(int i) { return catList[i]; }
-	void incrementUsage(const CatItem& item);
-	int getUsage(const QString& path);
-};
-
-// The slow catalog searches slowly but
-// adding items is fast and uses less memory
-// than FastCatalog
-class SlowCatalog : public Catalog {
-private:
-	QList<CatItem> catList;
-public:
-	SlowCatalog() : Catalog() {}
-	void addItem(CatItem item);
-	QList<CatItem*> search(QString);
-	int count() { return catList.count(); }
-	const CatItem & getItem(int i) { return catList[i]; }
-	void incrementUsage(const CatItem& item);
-	int getUsage(const QString& path);
-};
 
 #endif

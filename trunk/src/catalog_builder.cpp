@@ -19,17 +19,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 
-#include "catalog.h"
+#include "catalog_types.h"
 #include "catalog_builder.h"
 #include "globals.h"
 #include "main.h"
 #include "options.h"
+#include <QDebug>
 
 #include <QFile>
 #include <QDataStream>
 
+extern "C"
+{
+#include "pinyin-kit\\getpinyin.h"
+};
+#pragma comment(lib, "libpinyin-kit.a")
+#include "Windows.h"
+
+
 CatBuilder::CatBuilder(bool fromArchive, PluginHandler* plugs) :
-  buildFromStorage(fromArchive), curcat(NULL), plugins(plugs)
+    curcat(NULL), plugins(plugs), buildFromStorage(fromArchive)
 {
 	if (gSettings->value("GenOps/fastindexer",false).toBool())
 		cat = (Catalog*) new FastCatalog();
@@ -54,6 +63,42 @@ void CatBuilder::run() {
 	emit catalogFinished();
 }
 
+QString GetChineseLetter(QString str, int size)
+{
+	wchar_t *pshortName = (wchar_t*) str.data();
+
+	wchar_t oneChar = *pshortName;
+	wchar_t result[1024] = {0};
+	int result_len = 0;
+	char utf8char[8] = {0};
+	unsigned long dw;
+
+	for (int i = 0; i < size; i++)
+	{
+		oneChar = *(pshortName + i);
+		dw = (unsigned long)oneChar;  
+		if(dw < 0x4E00 || dw > 0x9fA5)     //not Chinese
+		{
+			*(result + result_len) = oneChar;
+			result_len++;
+			continue;
+		}
+
+		WideCharToMultiByte( CP_UTF8, 0, &oneChar, -1, (char*)utf8char, 8, NULL, NULL );
+		const char *pinyin = get_pinyin( (char*)utf8char);
+		wchar_t unicodechar[64] = {0};
+		int l = MultiByteToWideChar(CP_ACP, 0, pinyin, -1, unicodechar, 64); 
+		memcpy(result + result_len, (char*)unicodechar, (l-1)*2);
+		//wmemcpy(result + result_len, unicodechar, l-1);
+		result_len += (l -1);
+
+	}
+
+	QString t((const QChar*) result , result_len);
+	return t;
+}
+
+
 void CatBuilder::buildCatalog() {
 	MyWidget* main = qobject_cast<MyWidget*>(gMainWidget);
 	if (main == NULL) return;
@@ -72,12 +117,12 @@ void CatBuilder::buildCatalog() {
 	gSettings->endArray();
 
 	if (memDirs.count() == 0) {
-		memDirs = main->platform.GetInitialDirs();
+		memDirs = main->platform->GetInitialDirs();
 	}
 
 	for(int i = 0; i < memDirs.count(); ++i) {
 		emit(catalogIncrement(100.0 * (float)(i+1) / (float) memDirs.count()));
-		QString cur = main->platform.expandEnvironmentVars(memDirs[i].name);
+		QString cur = main->platform->expandEnvironmentVars(memDirs[i].name);
 		indexDirectory(cur, memDirs[i].types, memDirs[i].indexDirs, memDirs[i].indexExe, memDirs[i].depth);
 	}
 	
@@ -93,9 +138,13 @@ void CatBuilder::buildCatalog() {
 	emit(catalogIncrement(0.0));
 }
 
+
 void CatBuilder::indexDirectory(QString dir, QStringList filters, bool fdirs, bool fbin, int depth)
 {
-//	dir = QDir::toNativeSeparators(dir);
+    MyWidget* main = qobject_cast<MyWidget*>(gMainWidget);
+    if (!main) return;
+    dir = QDir::toNativeSeparators(dir);
+    
 	QDir qd(dir);
 	dir = qd.absolutePath();
 	QStringList dirs = qd.entryList(QDir::AllDirs);
@@ -118,7 +167,10 @@ void CatBuilder::indexDirectory(QString dir, QStringList filters, bool fdirs, bo
 					
 				CatItem item(dir + "/" + dirs[i], !isShortcut);
 				if (curcat != NULL)
+				{
 					item.usage = curcat->getUsage(item.fullPath);
+					item.lowName = GetChineseLetter(item.lowName, item.lowName.length());
+				}
 				cat->addItem(item);
 				indexed[dir + "/" + dirs[i]] = true;
 			}
@@ -132,7 +184,10 @@ void CatBuilder::indexDirectory(QString dir, QStringList filters, bool fdirs, bo
 				if (!indexed.contains(dir + "/" + dirs[i])) {
 					CatItem item(dir + "/" + dirs[i], true);
 					if (curcat != NULL)
+					{
 						item.usage = curcat->getUsage(item.fullPath);
+						item.lowName = GetChineseLetter(item.lowName, item.lowName.length());
+					}
 					cat->addItem(item);
 					indexed[dir + "/" + dirs[i]] = true;
 				}
@@ -140,7 +195,6 @@ void CatBuilder::indexDirectory(QString dir, QStringList filters, bool fdirs, bo
 		}
 	}
 
-	
 
 	if (fbin) {
 		QStringList bins = qd.entryList(QDir::Files | QDir::Executable);
@@ -148,7 +202,10 @@ void CatBuilder::indexDirectory(QString dir, QStringList filters, bool fdirs, bo
 			if (!indexed.contains(dir + "/" + bins[i])) {
 				CatItem item(dir + "/" + bins[i]);
 				if (curcat != NULL)
+				{
 					item.usage = curcat->getUsage(item.fullPath);
+					item.lowName = GetChineseLetter(item.lowName, item.lowName.length());
+				}
 				cat->addItem(item);
 				indexed[dir + "/" + bins[i]] = true;
 			}
@@ -163,9 +220,12 @@ void CatBuilder::indexDirectory(QString dir, QStringList filters, bool fdirs, bo
 	for(int i = 0; i < files.count(); ++i) {
 		if (!indexed.contains(dir + "/" + files[i])) {
 			CatItem item(dir + "/" + files[i]);
- 
 			if (curcat != NULL)
+			{
 				item.usage = curcat->getUsage(item.fullPath);
+				item.lowName = GetChineseLetter(item.lowName, item.lowName.length());
+			}
+			main->platform->alterItem(&item);
 			cat->addItem(item);
 			indexed[dir + "/" + files[i]] = true;
 		}
@@ -176,24 +236,25 @@ void CatBuilder::indexDirectory(QString dir, QStringList filters, bool fdirs, bo
 bool CatBuilder::loadCatalog(QString dest) {
 
     QFile inFile(dest);
-	if (!inFile.open(QIODevice::ReadOnly)) {
-		return false;
-	}
+    if (!inFile.open(QIODevice::ReadOnly)) {
+	return false;
+    }
+
     QByteArray ba = inFile.readAll();
-
-	QByteArray unzipped = qUncompress(ba);
-
-	QDataStream in(&unzipped, QIODevice::ReadOnly);
-	in.setVersion(QDataStream::Qt_4_2);
-
-	while(!in.atEnd()) {
-		CatItem item;
-		in >> item;
-		cat->addItem(item);
-	}
-	
-
-	return true;
+    
+    QByteArray unzipped = qUncompress(ba);
+    
+    QDataStream in(&unzipped, QIODevice::ReadOnly);
+    in.setVersion(QDataStream::Qt_4_2);
+    
+    while(!in.atEnd()) {
+	CatItem item;
+	in >> item;
+	cat->addItem(item);
+    }
+    
+    
+    return true;
 }
 
 void CatBuilder::storeCatalog(QString dest) {
@@ -210,7 +271,7 @@ void CatBuilder::storeCatalog(QString dest) {
 	// Zip the archive
 	QFile file(dest);
 	if (!file.open(QIODevice::WriteOnly)) {
-	    		qDebug() << "Could not open database for writing";
+	    //		qDebug() << "Could not open database for writing";
 	}
 	file.write(qCompress(ba));
 }
