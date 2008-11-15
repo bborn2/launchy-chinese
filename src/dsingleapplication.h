@@ -64,8 +64,8 @@ const int d_timeout_try_write   = 30000;
 
 #include <QString>
 #include <QThread>
-#include <QtNetwork\QTcpSocket>
-#include <QtNetwork\QTcpServer>
+#include <QTcpSocket>
+#include <QTcpServer>
 
 class DTalker;
 
