@@ -1,6 +1,6 @@
 /*
 Launchy: Application Launcher
-Copyright (C) 2007  Josh Karlin
+Copyright (C) 2007-2009  Josh Karlin
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,12 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define CATALOG_H
 
 #include <QString>
-#include <QStringList>
-#include <QBitArray>
-#include <QIcon>
-#include <QHash>
 #include <QDataStream>
-#include <QDir>
 #include <QSet>
 
 
@@ -127,7 +122,7 @@ public:
 		return *this;
 	}
 
-	bool operator==(const CatItem& other) const{
+	bool operator==(const CatItem& other) const {
 		if (fullPath == other.fullPath)
 			return true;
 		return false;
@@ -159,6 +154,8 @@ public:
 	QSet<uint>  getLabels() { return labels; }
 	/** Apply a label to this query segment */
 	void setLabel(uint l) { labels.insert(l); }
+	/** Remove a label from this query segment */
+	void removeLabel(uint l) { labels.remove(l); }
 	/** Check if it has the given label applied to it */
 	bool hasLabel(uint l) { return labels.contains(l); }
 
@@ -173,13 +170,16 @@ public:
 	void setID(uint i) { id = i; }
 
 	/** Returns the current owner id of the query */
-	uint getID() { return id; }
+	uint getID() const { return id; }
 
 	/** Get the text of the query segment */
-	QString  getText() { return text; }
+	QString  getText() const { return text; }
 
 	/** Set the text of the query segment */
 	void setText(QString t) { text = t; }
+
+	/** Get the text of the query segment */
+	bool hasText() const { return text.length() > 0; }
 
 	/** Get a pointer to the best catalog match for this segment of the query */
 	CatItem&  getTopResult() { return topResult; }
@@ -189,10 +189,13 @@ public:
 
 	InputData() { id = 0; }
 	InputData(QString str) : text(str) { id = 0;}
+
+	friend QDataStream &operator<<(QDataStream &out, const InputData &inputData);
+	friend QDataStream &operator>>(QDataStream &in, InputData &inputData);
 };
 
-bool CatLess (CatItem* left, CatItem* right); 
-bool CatLessNoPtr (CatItem & a, CatItem & b);
+bool CatLess(CatItem* left, CatItem* right); 
+bool CatLessNoPtr(CatItem& a, CatItem& b);
 
 inline QDataStream &operator<<(QDataStream &out, const CatItem &item) {
 	out << item.fullPath;
@@ -215,6 +218,21 @@ inline QDataStream &operator>>(QDataStream &in, CatItem &item) {
 }
 
 
+inline QDataStream &operator<<(QDataStream &out, const InputData &inputData) {
+	out << inputData.text;
+	out << inputData.labels;
+	out << inputData.topResult;
+	out << inputData.id;
+	return out;
+}
+
+inline QDataStream &operator>>(QDataStream &in, InputData &inputData) {
+	in >> inputData.text;
+	in >> inputData.labels;
+	in >> inputData.topResult;
+	in >> inputData.id;
+	return in;
+}
 
 
 #endif

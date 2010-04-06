@@ -1,137 +1,61 @@
-#ifndef PLATFORM_WIN_UTIL
-#define PLATFORM_WIN_UTIL
+/*
+Launchy: Application Launcher
+Copyright (C) 2007-2009  Josh Karlin, Simon Capewell
 
-#define VC_EXTRALEAN
-#define WINVER 0x05100
-#define _WIN32_WINNT 0x0510	
-#define _WIN32_WINDOWS 0x0510 
-#define _WIN32_IE 0x0600
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-#ifndef _UNICODE
-#define _UNICODE
-#endif
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
-
-
-#include <QFileIconProvider>
-#include <windows.h>
-#include <shlobj.h>
-//#include <stdlib.h>
-//#include <stdio.h>
-#include <TCHAR.h>
-#include <QT>
-#include <QIcon>
-#include <QPixmap>
-#include <QString>
-#include <QtDebug>
-#include <QMouseEvent>
-#include <QWidget>
+#ifndef __PLATFORM_WIN_UTIL_H
+#define __PLATFORM_WIN_UTIL_H
 
 
-
-#pragma warning (disable : 4089)
-BOOL GetShellDir(int iType, QString& szPath);
+void UpdateEnvironment();
+QString GetShellDirectory(int type);
+bool EnumerateNetworkServers(QList<QString>& items, DWORD serverType, const wchar_t* domain = NULL);
 
 
 class LimitSingleInstance
 {
 public:
-  DWORD  m_dwLastError;
-  HANDLE m_hMutex;
-
-public:
-  LimitSingleInstance(TCHAR *strMutexName)
-  {
-    //Make sure that you use a name that is unique for this application otherwise
-    //two apps may think they are the same if they are using same name for
-    //3rd parm to CreateMutex
-    m_hMutex = CreateMutex(NULL, FALSE, strMutexName); //do early
-    m_dwLastError = GetLastError(); //save for use later...
-  }
-   
-  ~LimitSingleInstance() 
-  {
-    if (m_hMutex)  //Do not forget to close handles.
-    {
-       CloseHandle(m_hMutex); //Do as late as possible.
-       m_hMutex = NULL; //Good habit to be in.
-    }
-  }
-
-  BOOL IsAnotherInstanceRunning() 
-  {
-    return (ERROR_ALREADY_EXISTS == m_dwLastError);
-  }
-};
-
-class WinIconProvider : QFileIconProvider
-{
-public:
-	WinIconProvider() {
-		iconlist = GetSystemImageListHandle(false);
-	}
-	~WinIconProvider() {
-
+	LimitSingleInstance(TCHAR *strMutexName)
+	{
+		//Make sure that you use a name that is unique for this application otherwise
+		//two apps may think they are the same if they are using same name for
+		//3rd parm to CreateMutex
+		mutex = CreateMutex(NULL, FALSE, strMutexName); //do early
+		lastError = GetLastError(); //save for use later...
 	}
 
+	~LimitSingleInstance() 
+	{
+		if (mutex)  //Do not forget to close handles.
+		{
+			CloseHandle(mutex); //Do as late as possible.
+			mutex = NULL; //Good habit to be in.
+		}
+	}
 
-	virtual QIcon icon(const QFileInfo& info) const;
+	bool IsAnotherInstanceRunning() 
+	{
+		return (ERROR_ALREADY_EXISTS == lastError);
+	}
 
 private:
-
-	HIMAGELIST iconlist;	
-
-
-private:
-	HIMAGELIST GetSystemImageListHandle( bool bSmallIcon );
-
-
-	int GetFileIconIndex( QString strFileName , BOOL bSmallIcon ) const;
-
-	int GetDirIconIndex(BOOL bSmallIcon );
-	HICON GetFileIconHandle(QString strFileName, BOOL bSmallIcon);
-
-	HICON GetIconHandleNoOverlay(QString strFileName, BOOL bSmallIcon) const;
-
-	HICON GetFolderIconHandle(BOOL bSmallIcon );
-
-	QString GetFileType(QString strFileName);
-
-	QPixmap convertHIconToPixmap( const HICON icon) const;
-
+	HANDLE mutex;
+	DWORD  lastError;
 };
 
-
-class QLaunchyAlphaBorder : public QWidget {
-	Q_OBJECT  
-private:
-	QPoint moveStartPoint;
-public:
-	QLaunchyAlphaBorder(QWidget *parent)
-	: QWidget(parent,Qt::Tool | Qt::FramelessWindowHint) {
-	}
-	~QLaunchyAlphaBorder() {}
-	void SetImage(QString name);
-	void RepositionWindow(QPoint pos) {
-		move(pos);
-	}
-
-	void SetAlphaOpacity(double trans);
-	void contextMenuEvent(QContextMenuEvent* evt) {
-	    emit menuEvent(evt);
-	}
-	
-	void mousePressEvent(QMouseEvent *event) {
-	    emit mousePress(event);
-	}
-	void mouseMoveEvent(QMouseEvent *e) {
-	    emit mouseMove(e);
-	}
- signals:
-	void menuEvent(QContextMenuEvent*);
-	void mousePress(QMouseEvent*);
-	void mouseMove(QMouseEvent*);
-};
 
 #endif

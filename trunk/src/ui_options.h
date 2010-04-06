@@ -1,10 +1,10 @@
 /********************************************************************************
-** Form generated from reading ui file 'options.ui'
+** Form generated from reading UI file 'options.ui'
 **
-** Created: Tue Dec 18 13:43:14 2007
-**      by: Qt User Interface Compiler version 4.3.3
+** Created: Tue Apr 6 22:20:26 2010
+**      by: Qt User Interface Compiler version 4.6.2
 **
-** WARNING! All changes made in this file will be lost when recompiling ui file!
+** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
 #ifndef UI_OPTIONS_H
@@ -18,8 +18,11 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QDialog>
 #include <QtGui/QDialogButtonBox>
+#include <QtGui/QFormLayout>
+#include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QListWidget>
@@ -31,855 +34,1013 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include "DropListWidget.h"
+
+QT_BEGIN_NAMESPACE
 
 class Ui_OptionsDlg
 {
 public:
     QVBoxLayout *vboxLayout;
-    QHBoxLayout *hboxLayout;
     QTabWidget *tabWidget;
-    QWidget *tab;
+    QWidget *General;
     QVBoxLayout *vboxLayout1;
-    QHBoxLayout *hboxLayout1;
+    QHBoxLayout *hboxLayout;
     QVBoxLayout *vboxLayout2;
     QGroupBox *groupBox_4;
     QVBoxLayout *vboxLayout3;
     QCheckBox *genAlwaysShow;
     QCheckBox *genHideFocus;
     QCheckBox *genAlwaysTop;
-    QCheckBox *genCondensed;
-    QCheckBox *genCenter;
-    QHBoxLayout *hboxLayout2;
+    QCheckBox *genShowTrayIcon;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_5;
+    QCheckBox *genHCenter;
+    QCheckBox *genVCenter;
+    QSpacerItem *horizontalSpacer_2;
+    QCheckBox *genShiftDrag;
+    QHBoxLayout *hboxLayout1;
     QLabel *label;
-    QSpacerItem *spacerItem;
     QComboBox *genModifierBox;
-    QSpacerItem *spacerItem1;
     QComboBox *genKeyBox;
-    QSpacerItem *spacerItem2;
-    QSpacerItem *spacerItem3;
+    QSpacerItem *spacerItem;
     QGroupBox *groupBox_10;
     QVBoxLayout *vboxLayout4;
-    QHBoxLayout *hboxLayout3;
-    QVBoxLayout *vboxLayout5;
-    QLabel *label_6;
-    QLabel *label_3;
-    QLabel *label_4;
-    QVBoxLayout *vboxLayout6;
-    QSlider *genOpaqueness;
-    QSlider *genFadeIn;
-    QSlider *genFadeOut;
-    QHBoxLayout *hboxLayout4;
+    QCheckBox *genDecorateText;
+    QFormLayout *formLayout_2;
+    QSpinBox *genAutoSuggestDelay;
+    QSpinBox *genMaxViewable;
+    QSpinBox *genNumResults;
+    QLabel *label_11;
     QLabel *label_9;
-    QSpacerItem *spacerItem4;
-    QLineEdit *genMaxViewable;
-    QSpacerItem *spacerItem5;
-    QHBoxLayout *hboxLayout5;
     QLabel *label_8;
-    QSpacerItem *spacerItem6;
-    QLineEdit *genNumResults;
-    QSpacerItem *spacerItem7;
-    QHBoxLayout *hboxLayout6;
-    QGroupBox *groupBox_6;
-    QVBoxLayout *vboxLayout7;
-    QCheckBox *genUpdateCheck;
-    QCheckBox *genShowHidden;
-    QCheckBox *genPortable;
-    QCheckBox *genFastIndex;
-    QHBoxLayout *hboxLayout7;
-    QLabel *label_5;
-    QLineEdit *genUpMinutes;
     QLabel *label_7;
-    QSpacerItem *spacerItem8;
-    QSpacerItem *spacerItem9;
-    QSpacerItem *spacerItem10;
+    QSpinBox *genNumHistory;
+    QComboBox *genCondensed;
+    QLabel *label_12;
+    QSpacerItem *horizontalSpacer;
+    QHBoxLayout *horizontalLayout_4;
+    QVBoxLayout *verticalLayout_6;
+    QGroupBox *groupBox_11;
+    QVBoxLayout *_14;
+    QFormLayout *formLayout_3;
+    QLabel *label_6;
+    QSlider *genOpaqueness;
+    QLabel *label_3;
+    QSlider *genFadeIn;
+    QLabel *label_4;
+    QSlider *genFadeOut;
+    QGroupBox *groupBox_12;
+    QVBoxLayout *_15;
+    QFormLayout *formLayout_4;
+    QLabel *label_24;
+    QLineEdit *genProxyHostname;
+    QLabel *label_25;
+    QLineEdit *genProxyPort;
+    QGroupBox *groupBox_6;
+    QVBoxLayout *vboxLayout5;
+    QHBoxLayout *hboxLayout2;
+    QCheckBox *genUpdateCatalog;
+    QSpinBox *genUpdateMinutes;
+    QCheckBox *genShowHidden;
+    QCheckBox *genShowNetwork;
+    QCheckBox *genUseWildcards;
+    QCheckBox *genUpdateCheck;
+    QCheckBox *genPortable;
+    QSpacerItem *spacerItem1;
     QWidget *Skins;
-    QVBoxLayout *vboxLayout8;
-    QHBoxLayout *hboxLayout8;
+    QVBoxLayout *vboxLayout6;
+    QHBoxLayout *hboxLayout3;
     QGroupBox *groupBox_3;
-    QHBoxLayout *hboxLayout9;
+    QHBoxLayout *hboxLayout4;
     QListWidget *skinList;
     QGroupBox *groupBox_8;
-    QVBoxLayout *vboxLayout9;
+    QVBoxLayout *vboxLayout7;
     QLabel *authorInfo;
-    QSpacerItem *spacerItem11;
     QGroupBox *groupBox_9;
-    QVBoxLayout *vboxLayout10;
+    QVBoxLayout *vboxLayout8;
     QLabel *skinPreview;
-    QWidget *tab_2;
+    QWidget *Catalog;
+    QVBoxLayout *vboxLayout9;
+    QHBoxLayout *hboxLayout5;
+    QVBoxLayout *vboxLayout10;
+    QGroupBox *directoriesGroupBox;
     QVBoxLayout *vboxLayout11;
-    QHBoxLayout *hboxLayout10;
+    DropListWidget *catDirectories;
+    QHBoxLayout *hboxLayout6;
+    QSpacerItem *spacerItem2;
+    QPushButton *catDirPlus;
+    QSpacerItem *spacerItem3;
+    QPushButton *catDirMinus;
+    QSpacerItem *spacerItem4;
+    QGroupBox *fileTypesGroupBox;
     QVBoxLayout *vboxLayout12;
-    QGroupBox *groupBox_2;
-    QVBoxLayout *vboxLayout13;
     QListWidget *catTypes;
-    QLineEdit *catTypeEdit;
+    QHBoxLayout *horizontalLayout;
     QPushButton *catTypesPlus;
     QPushButton *catTypesMinus;
     QCheckBox *catCheckBinaries;
     QCheckBox *catCheckDirs;
-    QHBoxLayout *hboxLayout11;
+    QHBoxLayout *hboxLayout7;
     QLabel *label_10;
     QSpinBox *catDepth;
-    QSpacerItem *spacerItem12;
+    QVBoxLayout *vboxLayout13;
     QVBoxLayout *vboxLayout14;
-    QGroupBox *groupBox;
-    QVBoxLayout *vboxLayout15;
-    QListWidget *catDirectories;
-    QHBoxLayout *hboxLayout12;
-    QSpacerItem *spacerItem13;
-    QPushButton *catDirPlus;
-    QSpacerItem *spacerItem14;
-    QPushButton *catDirMinus;
-    QSpacerItem *spacerItem15;
-    QSpacerItem *spacerItem16;
-    QSpacerItem *spacerItem17;
-    QVBoxLayout *vboxLayout16;
-    QHBoxLayout *hboxLayout13;
+    QHBoxLayout *hboxLayout8;
     QPushButton *catRescan;
-    QSpacerItem *spacerItem18;
+    QSpacerItem *spacerItem5;
     QLabel *catSize;
-    QSpacerItem *spacerItem19;
+    QSpacerItem *spacerItem6;
     QProgressBar *catProgress;
-    QWidget *tab_4;
-    QVBoxLayout *vboxLayout17;
-    QHBoxLayout *hboxLayout14;
+    QWidget *Plugins;
+    QVBoxLayout *vboxLayout15;
+    QHBoxLayout *hboxLayout9;
     QGroupBox *groupBox_7;
-    QVBoxLayout *vboxLayout18;
+    QVBoxLayout *vboxLayout16;
     QListWidget *plugList;
     QGroupBox *plugBox;
-    QVBoxLayout *vboxLayout19;
-    QSpacerItem *spacerItem20;
-    QWidget *tab_3;
-    QVBoxLayout *vboxLayout20;
-    QSpacerItem *spacerItem21;
-    QHBoxLayout *hboxLayout15;
-    QSpacerItem *spacerItem22;
+    QVBoxLayout *vboxLayout17;
+    QWidget *About;
+    QVBoxLayout *verticalLayout;
+    QGridLayout *gridLayout_2;
+    QLabel *icon;
     QLabel *aboutVer;
-    QSpacerItem *spacerItem23;
-    QHBoxLayout *hboxLayout16;
-    QSpacerItem *spacerItem24;
+    QLabel *aboutText;
     QLabel *label_2;
-    QSpacerItem *spacerItem25;
-    QSpacerItem *spacerItem26;
-    QHBoxLayout *hboxLayout17;
-    QSpacerItem *spacerItem27;
+    QLabel *aboutText_2;
+    QSpacerItem *verticalSpacer;
+    QHBoxLayout *hboxLayout10;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *OptionsDlg)
     {
-    if (OptionsDlg->objectName().isEmpty())
-        OptionsDlg->setObjectName(QString::fromUtf8("OptionsDlg"));
-    OptionsDlg->setWindowModality(Qt::NonModal);
-    OptionsDlg->resize(566, 453);
-    vboxLayout = new QVBoxLayout(OptionsDlg);
-    vboxLayout->setObjectName(QString::fromUtf8("vboxLayout"));
-    hboxLayout = new QHBoxLayout();
-    hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
+        if (OptionsDlg->objectName().isEmpty())
+            OptionsDlg->setObjectName(QString::fromUtf8("OptionsDlg"));
+        OptionsDlg->setWindowModality(Qt::NonModal);
+        OptionsDlg->resize(678, 494);
+        vboxLayout = new QVBoxLayout(OptionsDlg);
+        vboxLayout->setObjectName(QString::fromUtf8("vboxLayout"));
+        tabWidget = new QTabWidget(OptionsDlg);
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        General = new QWidget();
+        General->setObjectName(QString::fromUtf8("General"));
+        vboxLayout1 = new QVBoxLayout(General);
+        vboxLayout1->setObjectName(QString::fromUtf8("vboxLayout1"));
+        hboxLayout = new QHBoxLayout();
+        hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
+        vboxLayout2 = new QVBoxLayout();
+        vboxLayout2->setObjectName(QString::fromUtf8("vboxLayout2"));
+        groupBox_4 = new QGroupBox(General);
+        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(groupBox_4->sizePolicy().hasHeightForWidth());
+        groupBox_4->setSizePolicy(sizePolicy);
+        groupBox_4->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+        vboxLayout3 = new QVBoxLayout(groupBox_4);
+        vboxLayout3->setObjectName(QString::fromUtf8("vboxLayout3"));
+        genAlwaysShow = new QCheckBox(groupBox_4);
+        genAlwaysShow->setObjectName(QString::fromUtf8("genAlwaysShow"));
 
-    vboxLayout->addLayout(hboxLayout);
+        vboxLayout3->addWidget(genAlwaysShow);
 
-    tabWidget = new QTabWidget(OptionsDlg);
-    tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
-    tab = new QWidget();
-    tab->setObjectName(QString::fromUtf8("tab"));
-    vboxLayout1 = new QVBoxLayout(tab);
-    vboxLayout1->setObjectName(QString::fromUtf8("vboxLayout1"));
-    hboxLayout1 = new QHBoxLayout();
-    hboxLayout1->setObjectName(QString::fromUtf8("hboxLayout1"));
-    vboxLayout2 = new QVBoxLayout();
-    vboxLayout2->setObjectName(QString::fromUtf8("vboxLayout2"));
-    groupBox_4 = new QGroupBox(tab);
-    groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
-    vboxLayout3 = new QVBoxLayout(groupBox_4);
-    vboxLayout3->setObjectName(QString::fromUtf8("vboxLayout3"));
-    genAlwaysShow = new QCheckBox(groupBox_4);
-    genAlwaysShow->setObjectName(QString::fromUtf8("genAlwaysShow"));
+        genHideFocus = new QCheckBox(groupBox_4);
+        genHideFocus->setObjectName(QString::fromUtf8("genHideFocus"));
 
-    vboxLayout3->addWidget(genAlwaysShow);
+        vboxLayout3->addWidget(genHideFocus);
 
-    genHideFocus = new QCheckBox(groupBox_4);
-    genHideFocus->setObjectName(QString::fromUtf8("genHideFocus"));
+        genAlwaysTop = new QCheckBox(groupBox_4);
+        genAlwaysTop->setObjectName(QString::fromUtf8("genAlwaysTop"));
+        genAlwaysTop->setEnabled(true);
 
-    vboxLayout3->addWidget(genHideFocus);
+        vboxLayout3->addWidget(genAlwaysTop);
 
-    genAlwaysTop = new QCheckBox(groupBox_4);
-    genAlwaysTop->setObjectName(QString::fromUtf8("genAlwaysTop"));
-    genAlwaysTop->setEnabled(false);
+        genShowTrayIcon = new QCheckBox(groupBox_4);
+        genShowTrayIcon->setObjectName(QString::fromUtf8("genShowTrayIcon"));
 
-    vboxLayout3->addWidget(genAlwaysTop);
+        vboxLayout3->addWidget(genShowTrayIcon);
 
-    genCondensed = new QCheckBox(groupBox_4);
-    genCondensed->setObjectName(QString::fromUtf8("genCondensed"));
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label_5 = new QLabel(groupBox_4);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
 
-    vboxLayout3->addWidget(genCondensed);
+        horizontalLayout_2->addWidget(label_5);
 
-    genCenter = new QCheckBox(groupBox_4);
-    genCenter->setObjectName(QString::fromUtf8("genCenter"));
+        genHCenter = new QCheckBox(groupBox_4);
+        genHCenter->setObjectName(QString::fromUtf8("genHCenter"));
 
-    vboxLayout3->addWidget(genCenter);
+        horizontalLayout_2->addWidget(genHCenter);
 
-    hboxLayout2 = new QHBoxLayout();
-    hboxLayout2->setObjectName(QString::fromUtf8("hboxLayout2"));
-    label = new QLabel(groupBox_4);
-    label->setObjectName(QString::fromUtf8("label"));
+        genVCenter = new QCheckBox(groupBox_4);
+        genVCenter->setObjectName(QString::fromUtf8("genVCenter"));
 
-    hboxLayout2->addWidget(label);
+        horizontalLayout_2->addWidget(genVCenter);
 
-    spacerItem = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_2 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout2->addItem(spacerItem);
+        horizontalLayout_2->addItem(horizontalSpacer_2);
 
-    genModifierBox = new QComboBox(groupBox_4);
-    genModifierBox->setObjectName(QString::fromUtf8("genModifierBox"));
 
-    hboxLayout2->addWidget(genModifierBox);
+        vboxLayout3->addLayout(horizontalLayout_2);
 
-    spacerItem1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        genShiftDrag = new QCheckBox(groupBox_4);
+        genShiftDrag->setObjectName(QString::fromUtf8("genShiftDrag"));
 
-    hboxLayout2->addItem(spacerItem1);
+        vboxLayout3->addWidget(genShiftDrag);
 
-    genKeyBox = new QComboBox(groupBox_4);
-    genKeyBox->setObjectName(QString::fromUtf8("genKeyBox"));
+        hboxLayout1 = new QHBoxLayout();
+        hboxLayout1->setObjectName(QString::fromUtf8("hboxLayout1"));
+        label = new QLabel(groupBox_4);
+        label->setObjectName(QString::fromUtf8("label"));
 
-    hboxLayout2->addWidget(genKeyBox);
+        hboxLayout1->addWidget(label);
 
-    spacerItem2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        genModifierBox = new QComboBox(groupBox_4);
+        genModifierBox->setObjectName(QString::fromUtf8("genModifierBox"));
+        genModifierBox->setMinimumSize(QSize(80, 0));
 
-    hboxLayout2->addItem(spacerItem2);
+        hboxLayout1->addWidget(genModifierBox);
 
+        genKeyBox = new QComboBox(groupBox_4);
+        genKeyBox->setObjectName(QString::fromUtf8("genKeyBox"));
+        genKeyBox->setMinimumSize(QSize(80, 0));
 
-    vboxLayout3->addLayout(hboxLayout2);
+        hboxLayout1->addWidget(genKeyBox);
 
+        spacerItem = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout2->addWidget(groupBox_4);
+        hboxLayout1->addItem(spacerItem);
 
-    spacerItem3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    vboxLayout2->addItem(spacerItem3);
+        vboxLayout3->addLayout(hboxLayout1);
 
 
-    hboxLayout1->addLayout(vboxLayout2);
+        vboxLayout2->addWidget(groupBox_4);
 
-    groupBox_10 = new QGroupBox(tab);
-    groupBox_10->setObjectName(QString::fromUtf8("groupBox_10"));
-    vboxLayout4 = new QVBoxLayout(groupBox_10);
-    vboxLayout4->setObjectName(QString::fromUtf8("vboxLayout4"));
-    hboxLayout3 = new QHBoxLayout();
-    hboxLayout3->setObjectName(QString::fromUtf8("hboxLayout3"));
-    vboxLayout5 = new QVBoxLayout();
-    vboxLayout5->setObjectName(QString::fromUtf8("vboxLayout5"));
-    label_6 = new QLabel(groupBox_10);
-    label_6->setObjectName(QString::fromUtf8("label_6"));
 
-    vboxLayout5->addWidget(label_6);
+        hboxLayout->addLayout(vboxLayout2);
 
-    label_3 = new QLabel(groupBox_10);
-    label_3->setObjectName(QString::fromUtf8("label_3"));
+        groupBox_10 = new QGroupBox(General);
+        groupBox_10->setObjectName(QString::fromUtf8("groupBox_10"));
+        groupBox_10->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+        vboxLayout4 = new QVBoxLayout(groupBox_10);
+        vboxLayout4->setObjectName(QString::fromUtf8("vboxLayout4"));
+        genDecorateText = new QCheckBox(groupBox_10);
+        genDecorateText->setObjectName(QString::fromUtf8("genDecorateText"));
 
-    vboxLayout5->addWidget(label_3);
+        vboxLayout4->addWidget(genDecorateText);
 
-    label_4 = new QLabel(groupBox_10);
-    label_4->setObjectName(QString::fromUtf8("label_4"));
+        formLayout_2 = new QFormLayout();
+        formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+        formLayout_2->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+        genAutoSuggestDelay = new QSpinBox(groupBox_10);
+        genAutoSuggestDelay->setObjectName(QString::fromUtf8("genAutoSuggestDelay"));
+        genAutoSuggestDelay->setMaximum(99999);
+        genAutoSuggestDelay->setSingleStep(50);
+        genAutoSuggestDelay->setValue(1000);
 
-    vboxLayout5->addWidget(label_4);
+        formLayout_2->setWidget(1, QFormLayout::FieldRole, genAutoSuggestDelay);
 
+        genMaxViewable = new QSpinBox(groupBox_10);
+        genMaxViewable->setObjectName(QString::fromUtf8("genMaxViewable"));
+        genMaxViewable->setMinimum(1);
+        genMaxViewable->setMaximum(999);
+        genMaxViewable->setValue(4);
 
-    hboxLayout3->addLayout(vboxLayout5);
+        formLayout_2->setWidget(2, QFormLayout::FieldRole, genMaxViewable);
 
-    vboxLayout6 = new QVBoxLayout();
-    vboxLayout6->setObjectName(QString::fromUtf8("vboxLayout6"));
-    genOpaqueness = new QSlider(groupBox_10);
-    genOpaqueness->setObjectName(QString::fromUtf8("genOpaqueness"));
-    genOpaqueness->setMaximum(100);
-    genOpaqueness->setOrientation(Qt::Horizontal);
+        genNumResults = new QSpinBox(groupBox_10);
+        genNumResults->setObjectName(QString::fromUtf8("genNumResults"));
+        genNumResults->setMinimum(1);
+        genNumResults->setMaximum(9999);
+        genNumResults->setValue(20);
 
-    vboxLayout6->addWidget(genOpaqueness);
+        formLayout_2->setWidget(3, QFormLayout::FieldRole, genNumResults);
 
-    genFadeIn = new QSlider(groupBox_10);
-    genFadeIn->setObjectName(QString::fromUtf8("genFadeIn"));
-    genFadeIn->setMaximum(1000);
-    genFadeIn->setSingleStep(10);
-    genFadeIn->setOrientation(Qt::Horizontal);
+        label_11 = new QLabel(groupBox_10);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(label_11->sizePolicy().hasHeightForWidth());
+        label_11->setSizePolicy(sizePolicy1);
 
-    vboxLayout6->addWidget(genFadeIn);
+        formLayout_2->setWidget(1, QFormLayout::LabelRole, label_11);
 
-    genFadeOut = new QSlider(groupBox_10);
-    genFadeOut->setObjectName(QString::fromUtf8("genFadeOut"));
-    genFadeOut->setMaximum(1000);
-    genFadeOut->setSingleStep(10);
-    genFadeOut->setOrientation(Qt::Horizontal);
-    genFadeOut->setTickPosition(QSlider::NoTicks);
+        label_9 = new QLabel(groupBox_10);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
 
-    vboxLayout6->addWidget(genFadeOut);
+        formLayout_2->setWidget(2, QFormLayout::LabelRole, label_9);
 
+        label_8 = new QLabel(groupBox_10);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
 
-    hboxLayout3->addLayout(vboxLayout6);
+        formLayout_2->setWidget(3, QFormLayout::LabelRole, label_8);
 
+        label_7 = new QLabel(groupBox_10);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
 
-    vboxLayout4->addLayout(hboxLayout3);
+        formLayout_2->setWidget(4, QFormLayout::LabelRole, label_7);
 
-    hboxLayout4 = new QHBoxLayout();
-    hboxLayout4->setObjectName(QString::fromUtf8("hboxLayout4"));
-    label_9 = new QLabel(groupBox_10);
-    label_9->setObjectName(QString::fromUtf8("label_9"));
+        genNumHistory = new QSpinBox(groupBox_10);
+        genNumHistory->setObjectName(QString::fromUtf8("genNumHistory"));
+        genNumHistory->setMaximum(999);
+        genNumHistory->setValue(20);
 
-    hboxLayout4->addWidget(label_9);
+        formLayout_2->setWidget(4, QFormLayout::FieldRole, genNumHistory);
 
-    spacerItem4 = new QSpacerItem(16, 16, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        genCondensed = new QComboBox(groupBox_10);
+        genCondensed->setObjectName(QString::fromUtf8("genCondensed"));
 
-    hboxLayout4->addItem(spacerItem4);
+        formLayout_2->setWidget(0, QFormLayout::FieldRole, genCondensed);
 
-    genMaxViewable = new QLineEdit(groupBox_10);
-    genMaxViewable->setObjectName(QString::fromUtf8("genMaxViewable"));
-    genMaxViewable->setMaximumSize(QSize(40, 16777215));
+        label_12 = new QLabel(groupBox_10);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
 
-    hboxLayout4->addWidget(genMaxViewable);
+        formLayout_2->setWidget(0, QFormLayout::LabelRole, label_12);
 
-    spacerItem5 = new QSpacerItem(16, 16, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout4->addItem(spacerItem5);
+        vboxLayout4->addLayout(formLayout_2);
 
+        horizontalSpacer = new QSpacerItem(40, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout4->addLayout(hboxLayout4);
+        vboxLayout4->addItem(horizontalSpacer);
 
-    hboxLayout5 = new QHBoxLayout();
-    hboxLayout5->setObjectName(QString::fromUtf8("hboxLayout5"));
-    label_8 = new QLabel(groupBox_10);
-    label_8->setObjectName(QString::fromUtf8("label_8"));
 
-    hboxLayout5->addWidget(label_8);
+        hboxLayout->addWidget(groupBox_10);
 
-    spacerItem6 = new QSpacerItem(16, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout5->addItem(spacerItem6);
+        vboxLayout1->addLayout(hboxLayout);
 
-    genNumResults = new QLineEdit(groupBox_10);
-    genNumResults->setObjectName(QString::fromUtf8("genNumResults"));
-    genNumResults->setMaximumSize(QSize(40, 16777215));
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        verticalLayout_6 = new QVBoxLayout();
+        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
+        groupBox_11 = new QGroupBox(General);
+        groupBox_11->setObjectName(QString::fromUtf8("groupBox_11"));
+        sizePolicy.setHeightForWidth(groupBox_11->sizePolicy().hasHeightForWidth());
+        groupBox_11->setSizePolicy(sizePolicy);
+        _14 = new QVBoxLayout(groupBox_11);
+        _14->setObjectName(QString::fromUtf8("_14"));
+        formLayout_3 = new QFormLayout();
+        formLayout_3->setObjectName(QString::fromUtf8("formLayout_3"));
+        formLayout_3->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+        label_6 = new QLabel(groupBox_11);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
 
-    hboxLayout5->addWidget(genNumResults);
+        formLayout_3->setWidget(0, QFormLayout::LabelRole, label_6);
 
-    spacerItem7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        genOpaqueness = new QSlider(groupBox_11);
+        genOpaqueness->setObjectName(QString::fromUtf8("genOpaqueness"));
+        genOpaqueness->setMaximum(100);
+        genOpaqueness->setOrientation(Qt::Horizontal);
 
-    hboxLayout5->addItem(spacerItem7);
+        formLayout_3->setWidget(0, QFormLayout::FieldRole, genOpaqueness);
 
+        label_3 = new QLabel(groupBox_11);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
 
-    vboxLayout4->addLayout(hboxLayout5);
+        formLayout_3->setWidget(1, QFormLayout::LabelRole, label_3);
 
+        genFadeIn = new QSlider(groupBox_11);
+        genFadeIn->setObjectName(QString::fromUtf8("genFadeIn"));
+        genFadeIn->setMaximum(1000);
+        genFadeIn->setSingleStep(10);
+        genFadeIn->setOrientation(Qt::Horizontal);
 
-    hboxLayout1->addWidget(groupBox_10);
+        formLayout_3->setWidget(1, QFormLayout::FieldRole, genFadeIn);
 
+        label_4 = new QLabel(groupBox_11);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
 
-    vboxLayout1->addLayout(hboxLayout1);
+        formLayout_3->setWidget(2, QFormLayout::LabelRole, label_4);
 
-    hboxLayout6 = new QHBoxLayout();
-    hboxLayout6->setObjectName(QString::fromUtf8("hboxLayout6"));
-    groupBox_6 = new QGroupBox(tab);
-    groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
-    vboxLayout7 = new QVBoxLayout(groupBox_6);
-    vboxLayout7->setObjectName(QString::fromUtf8("vboxLayout7"));
-    genUpdateCheck = new QCheckBox(groupBox_6);
-    genUpdateCheck->setObjectName(QString::fromUtf8("genUpdateCheck"));
+        genFadeOut = new QSlider(groupBox_11);
+        genFadeOut->setObjectName(QString::fromUtf8("genFadeOut"));
+        genFadeOut->setMaximum(1000);
+        genFadeOut->setSingleStep(10);
+        genFadeOut->setOrientation(Qt::Horizontal);
+        genFadeOut->setTickPosition(QSlider::NoTicks);
 
-    vboxLayout7->addWidget(genUpdateCheck);
+        formLayout_3->setWidget(2, QFormLayout::FieldRole, genFadeOut);
 
-    genShowHidden = new QCheckBox(groupBox_6);
-    genShowHidden->setObjectName(QString::fromUtf8("genShowHidden"));
 
-    vboxLayout7->addWidget(genShowHidden);
+        _14->addLayout(formLayout_3);
 
-    genPortable = new QCheckBox(groupBox_6);
-    genPortable->setObjectName(QString::fromUtf8("genPortable"));
 
-    vboxLayout7->addWidget(genPortable);
+        verticalLayout_6->addWidget(groupBox_11);
 
-    genFastIndex = new QCheckBox(groupBox_6);
-    genFastIndex->setObjectName(QString::fromUtf8("genFastIndex"));
-    genFastIndex->setEnabled(false);
+        groupBox_12 = new QGroupBox(General);
+        groupBox_12->setObjectName(QString::fromUtf8("groupBox_12"));
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(groupBox_12->sizePolicy().hasHeightForWidth());
+        groupBox_12->setSizePolicy(sizePolicy2);
+        _15 = new QVBoxLayout(groupBox_12);
+        _15->setObjectName(QString::fromUtf8("_15"));
+        formLayout_4 = new QFormLayout();
+        formLayout_4->setObjectName(QString::fromUtf8("formLayout_4"));
+        formLayout_4->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+        label_24 = new QLabel(groupBox_12);
+        label_24->setObjectName(QString::fromUtf8("label_24"));
 
-    vboxLayout7->addWidget(genFastIndex);
+        formLayout_4->setWidget(0, QFormLayout::LabelRole, label_24);
 
-    hboxLayout7 = new QHBoxLayout();
-    hboxLayout7->setObjectName(QString::fromUtf8("hboxLayout7"));
-    label_5 = new QLabel(groupBox_6);
-    label_5->setObjectName(QString::fromUtf8("label_5"));
+        genProxyHostname = new QLineEdit(groupBox_12);
+        genProxyHostname->setObjectName(QString::fromUtf8("genProxyHostname"));
 
-    hboxLayout7->addWidget(label_5);
+        formLayout_4->setWidget(0, QFormLayout::FieldRole, genProxyHostname);
 
-    genUpMinutes = new QLineEdit(groupBox_6);
-    genUpMinutes->setObjectName(QString::fromUtf8("genUpMinutes"));
-    genUpMinutes->setMaximumSize(QSize(40, 16777215));
+        label_25 = new QLabel(groupBox_12);
+        label_25->setObjectName(QString::fromUtf8("label_25"));
 
-    hboxLayout7->addWidget(genUpMinutes);
+        formLayout_4->setWidget(1, QFormLayout::LabelRole, label_25);
 
-    label_7 = new QLabel(groupBox_6);
-    label_7->setObjectName(QString::fromUtf8("label_7"));
+        genProxyPort = new QLineEdit(groupBox_12);
+        genProxyPort->setObjectName(QString::fromUtf8("genProxyPort"));
+        genProxyPort->setMaxLength(5);
 
-    hboxLayout7->addWidget(label_7);
+        formLayout_4->setWidget(1, QFormLayout::FieldRole, genProxyPort);
 
-    spacerItem8 = new QSpacerItem(31, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout7->addItem(spacerItem8);
+        _15->addLayout(formLayout_4);
 
 
-    vboxLayout7->addLayout(hboxLayout7);
+        verticalLayout_6->addWidget(groupBox_12);
 
 
-    hboxLayout6->addWidget(groupBox_6);
+        horizontalLayout_4->addLayout(verticalLayout_6);
 
-    spacerItem9 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        groupBox_6 = new QGroupBox(General);
+        groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
+        sizePolicy.setHeightForWidth(groupBox_6->sizePolicy().hasHeightForWidth());
+        groupBox_6->setSizePolicy(sizePolicy);
+        vboxLayout5 = new QVBoxLayout(groupBox_6);
+        vboxLayout5->setObjectName(QString::fromUtf8("vboxLayout5"));
+        hboxLayout2 = new QHBoxLayout();
+        hboxLayout2->setObjectName(QString::fromUtf8("hboxLayout2"));
+        genUpdateCatalog = new QCheckBox(groupBox_6);
+        genUpdateCatalog->setObjectName(QString::fromUtf8("genUpdateCatalog"));
+        genUpdateCatalog->setChecked(true);
 
-    hboxLayout6->addItem(spacerItem9);
+        hboxLayout2->addWidget(genUpdateCatalog);
 
+        genUpdateMinutes = new QSpinBox(groupBox_6);
+        genUpdateMinutes->setObjectName(QString::fromUtf8("genUpdateMinutes"));
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(genUpdateMinutes->sizePolicy().hasHeightForWidth());
+        genUpdateMinutes->setSizePolicy(sizePolicy3);
+        genUpdateMinutes->setMinimumSize(QSize(80, 0));
+        genUpdateMinutes->setAccelerated(true);
+        genUpdateMinutes->setMinimum(1);
+        genUpdateMinutes->setMaximum(99999999);
+        genUpdateMinutes->setValue(10);
 
-    vboxLayout1->addLayout(hboxLayout6);
+        hboxLayout2->addWidget(genUpdateMinutes);
 
-    spacerItem10 = new QSpacerItem(524, 16, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    vboxLayout1->addItem(spacerItem10);
+        vboxLayout5->addLayout(hboxLayout2);
 
-    tabWidget->addTab(tab, QString());
-    Skins = new QWidget();
-    Skins->setObjectName(QString::fromUtf8("Skins"));
-    vboxLayout8 = new QVBoxLayout(Skins);
-    vboxLayout8->setObjectName(QString::fromUtf8("vboxLayout8"));
-    hboxLayout8 = new QHBoxLayout();
-    hboxLayout8->setObjectName(QString::fromUtf8("hboxLayout8"));
-    groupBox_3 = new QGroupBox(Skins);
-    groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-    groupBox_3->setMinimumSize(QSize(0, 0));
-    groupBox_3->setMaximumSize(QSize(160, 16777215));
-    hboxLayout9 = new QHBoxLayout(groupBox_3);
-    hboxLayout9->setObjectName(QString::fromUtf8("hboxLayout9"));
-    skinList = new QListWidget(groupBox_3);
-    skinList->setObjectName(QString::fromUtf8("skinList"));
-    skinList->setMaximumSize(QSize(150, 16777215));
+        genShowHidden = new QCheckBox(groupBox_6);
+        genShowHidden->setObjectName(QString::fromUtf8("genShowHidden"));
 
-    hboxLayout9->addWidget(skinList);
+        vboxLayout5->addWidget(genShowHidden);
 
+        genShowNetwork = new QCheckBox(groupBox_6);
+        genShowNetwork->setObjectName(QString::fromUtf8("genShowNetwork"));
 
-    hboxLayout8->addWidget(groupBox_3);
+        vboxLayout5->addWidget(genShowNetwork);
 
-    groupBox_8 = new QGroupBox(Skins);
-    groupBox_8->setObjectName(QString::fromUtf8("groupBox_8"));
-    groupBox_8->setMinimumSize(QSize(300, 166));
-    vboxLayout9 = new QVBoxLayout(groupBox_8);
-    vboxLayout9->setObjectName(QString::fromUtf8("vboxLayout9"));
-    authorInfo = new QLabel(groupBox_8);
-    authorInfo->setObjectName(QString::fromUtf8("authorInfo"));
-    authorInfo->setScaledContents(true);
-    authorInfo->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+        genUseWildcards = new QCheckBox(groupBox_6);
+        genUseWildcards->setObjectName(QString::fromUtf8("genUseWildcards"));
 
-    vboxLayout9->addWidget(authorInfo);
+        vboxLayout5->addWidget(genUseWildcards);
 
-    spacerItem11 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        genUpdateCheck = new QCheckBox(groupBox_6);
+        genUpdateCheck->setObjectName(QString::fromUtf8("genUpdateCheck"));
 
-    vboxLayout9->addItem(spacerItem11);
+        vboxLayout5->addWidget(genUpdateCheck);
 
+        genPortable = new QCheckBox(groupBox_6);
+        genPortable->setObjectName(QString::fromUtf8("genPortable"));
 
-    hboxLayout8->addWidget(groupBox_8);
+        vboxLayout5->addWidget(genPortable);
 
+        spacerItem1 = new QSpacerItem(31, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout8->addLayout(hboxLayout8);
+        vboxLayout5->addItem(spacerItem1);
 
-    groupBox_9 = new QGroupBox(Skins);
-    groupBox_9->setObjectName(QString::fromUtf8("groupBox_9"));
-    groupBox_9->setMinimumSize(QSize(0, 150));
-    vboxLayout10 = new QVBoxLayout(groupBox_9);
-    vboxLayout10->setObjectName(QString::fromUtf8("vboxLayout10"));
-    skinPreview = new QLabel(groupBox_9);
-    skinPreview->setObjectName(QString::fromUtf8("skinPreview"));
-    skinPreview->setScaledContents(false);
-    skinPreview->setAlignment(Qt::AlignCenter);
 
-    vboxLayout10->addWidget(skinPreview);
+        horizontalLayout_4->addWidget(groupBox_6);
 
 
-    vboxLayout8->addWidget(groupBox_9);
+        vboxLayout1->addLayout(horizontalLayout_4);
 
-    tabWidget->addTab(Skins, QString());
-    tab_2 = new QWidget();
-    tab_2->setObjectName(QString::fromUtf8("tab_2"));
-    vboxLayout11 = new QVBoxLayout(tab_2);
-    vboxLayout11->setObjectName(QString::fromUtf8("vboxLayout11"));
-    hboxLayout10 = new QHBoxLayout();
-    hboxLayout10->setObjectName(QString::fromUtf8("hboxLayout10"));
-    vboxLayout12 = new QVBoxLayout();
-    vboxLayout12->setObjectName(QString::fromUtf8("vboxLayout12"));
-    groupBox_2 = new QGroupBox(tab_2);
-    groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-    QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-    sizePolicy.setHeightForWidth(groupBox_2->sizePolicy().hasHeightForWidth());
-    groupBox_2->setSizePolicy(sizePolicy);
-    groupBox_2->setMaximumSize(QSize(115, 16777215));
-    vboxLayout13 = new QVBoxLayout(groupBox_2);
-    vboxLayout13->setObjectName(QString::fromUtf8("vboxLayout13"));
-    catTypes = new QListWidget(groupBox_2);
-    catTypes->setObjectName(QString::fromUtf8("catTypes"));
-    QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    sizePolicy1.setHorizontalStretch(0);
-    sizePolicy1.setVerticalStretch(0);
-    sizePolicy1.setHeightForWidth(catTypes->sizePolicy().hasHeightForWidth());
-    catTypes->setSizePolicy(sizePolicy1);
-    catTypes->setMaximumSize(QSize(16777215, 16777215));
+        tabWidget->addTab(General, QString());
+        Skins = new QWidget();
+        Skins->setObjectName(QString::fromUtf8("Skins"));
+        vboxLayout6 = new QVBoxLayout(Skins);
+        vboxLayout6->setObjectName(QString::fromUtf8("vboxLayout6"));
+        hboxLayout3 = new QHBoxLayout();
+        hboxLayout3->setObjectName(QString::fromUtf8("hboxLayout3"));
+        groupBox_3 = new QGroupBox(Skins);
+        groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
+        groupBox_3->setMinimumSize(QSize(0, 0));
+        groupBox_3->setMaximumSize(QSize(160, 16777215));
+        hboxLayout4 = new QHBoxLayout(groupBox_3);
+        hboxLayout4->setObjectName(QString::fromUtf8("hboxLayout4"));
+        skinList = new QListWidget(groupBox_3);
+        skinList->setObjectName(QString::fromUtf8("skinList"));
+        skinList->setMaximumSize(QSize(150, 16777215));
 
-    vboxLayout13->addWidget(catTypes);
+        hboxLayout4->addWidget(skinList);
 
-    catTypeEdit = new QLineEdit(groupBox_2);
-    catTypeEdit->setObjectName(QString::fromUtf8("catTypeEdit"));
-    QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    sizePolicy2.setHorizontalStretch(0);
-    sizePolicy2.setVerticalStretch(0);
-    sizePolicy2.setHeightForWidth(catTypeEdit->sizePolicy().hasHeightForWidth());
-    catTypeEdit->setSizePolicy(sizePolicy2);
-    catTypeEdit->setMaximumSize(QSize(16777215, 16777215));
 
-    vboxLayout13->addWidget(catTypeEdit);
+        hboxLayout3->addWidget(groupBox_3);
 
-    catTypesPlus = new QPushButton(groupBox_2);
-    catTypesPlus->setObjectName(QString::fromUtf8("catTypesPlus"));
-    catTypesPlus->setMaximumSize(QSize(16777215, 16));
+        groupBox_8 = new QGroupBox(Skins);
+        groupBox_8->setObjectName(QString::fromUtf8("groupBox_8"));
+        groupBox_8->setMinimumSize(QSize(300, 166));
+        vboxLayout7 = new QVBoxLayout(groupBox_8);
+        vboxLayout7->setObjectName(QString::fromUtf8("vboxLayout7"));
+        authorInfo = new QLabel(groupBox_8);
+        authorInfo->setObjectName(QString::fromUtf8("authorInfo"));
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(authorInfo->sizePolicy().hasHeightForWidth());
+        authorInfo->setSizePolicy(sizePolicy4);
+        authorInfo->setScaledContents(true);
+        authorInfo->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
 
-    vboxLayout13->addWidget(catTypesPlus);
+        vboxLayout7->addWidget(authorInfo);
 
-    catTypesMinus = new QPushButton(groupBox_2);
-    catTypesMinus->setObjectName(QString::fromUtf8("catTypesMinus"));
-    catTypesMinus->setMaximumSize(QSize(16777215, 16));
 
-    vboxLayout13->addWidget(catTypesMinus);
+        hboxLayout3->addWidget(groupBox_8);
 
-    catCheckBinaries = new QCheckBox(groupBox_2);
-    catCheckBinaries->setObjectName(QString::fromUtf8("catCheckBinaries"));
 
-    vboxLayout13->addWidget(catCheckBinaries);
+        vboxLayout6->addLayout(hboxLayout3);
 
-    catCheckDirs = new QCheckBox(groupBox_2);
-    catCheckDirs->setObjectName(QString::fromUtf8("catCheckDirs"));
+        groupBox_9 = new QGroupBox(Skins);
+        groupBox_9->setObjectName(QString::fromUtf8("groupBox_9"));
+        groupBox_9->setMinimumSize(QSize(0, 150));
+        vboxLayout8 = new QVBoxLayout(groupBox_9);
+        vboxLayout8->setObjectName(QString::fromUtf8("vboxLayout8"));
+        skinPreview = new QLabel(groupBox_9);
+        skinPreview->setObjectName(QString::fromUtf8("skinPreview"));
+        skinPreview->setMinimumSize(QSize(0, 116));
+        skinPreview->setAlignment(Qt::AlignCenter);
 
-    vboxLayout13->addWidget(catCheckDirs);
+        vboxLayout8->addWidget(skinPreview);
 
-    hboxLayout11 = new QHBoxLayout();
-    hboxLayout11->setObjectName(QString::fromUtf8("hboxLayout11"));
-    label_10 = new QLabel(groupBox_2);
-    label_10->setObjectName(QString::fromUtf8("label_10"));
 
-    hboxLayout11->addWidget(label_10);
+        vboxLayout6->addWidget(groupBox_9);
 
-    catDepth = new QSpinBox(groupBox_2);
-    catDepth->setObjectName(QString::fromUtf8("catDepth"));
-    catDepth->setMaximum(100000);
-    catDepth->setValue(100);
+        tabWidget->addTab(Skins, QString());
+        Catalog = new QWidget();
+        Catalog->setObjectName(QString::fromUtf8("Catalog"));
+        vboxLayout9 = new QVBoxLayout(Catalog);
+        vboxLayout9->setObjectName(QString::fromUtf8("vboxLayout9"));
+        hboxLayout5 = new QHBoxLayout();
+        hboxLayout5->setObjectName(QString::fromUtf8("hboxLayout5"));
+        vboxLayout10 = new QVBoxLayout();
+        vboxLayout10->setObjectName(QString::fromUtf8("vboxLayout10"));
+        directoriesGroupBox = new QGroupBox(Catalog);
+        directoriesGroupBox->setObjectName(QString::fromUtf8("directoriesGroupBox"));
+        vboxLayout11 = new QVBoxLayout(directoriesGroupBox);
+        vboxLayout11->setObjectName(QString::fromUtf8("vboxLayout11"));
+        catDirectories = new DropListWidget(directoriesGroupBox);
+        catDirectories->setObjectName(QString::fromUtf8("catDirectories"));
 
-    hboxLayout11->addWidget(catDepth);
+        vboxLayout11->addWidget(catDirectories);
 
+        hboxLayout6 = new QHBoxLayout();
+        hboxLayout6->setObjectName(QString::fromUtf8("hboxLayout6"));
+        spacerItem2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout13->addLayout(hboxLayout11);
+        hboxLayout6->addItem(spacerItem2);
 
+        catDirPlus = new QPushButton(directoriesGroupBox);
+        catDirPlus->setObjectName(QString::fromUtf8("catDirPlus"));
 
-    vboxLayout12->addWidget(groupBox_2);
+        hboxLayout6->addWidget(catDirPlus);
 
-    spacerItem12 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        spacerItem3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout12->addItem(spacerItem12);
+        hboxLayout6->addItem(spacerItem3);
 
+        catDirMinus = new QPushButton(directoriesGroupBox);
+        catDirMinus->setObjectName(QString::fromUtf8("catDirMinus"));
 
-    hboxLayout10->addLayout(vboxLayout12);
+        hboxLayout6->addWidget(catDirMinus);
 
-    vboxLayout14 = new QVBoxLayout();
-    vboxLayout14->setObjectName(QString::fromUtf8("vboxLayout14"));
-    groupBox = new QGroupBox(tab_2);
-    groupBox->setObjectName(QString::fromUtf8("groupBox"));
-    vboxLayout15 = new QVBoxLayout(groupBox);
-    vboxLayout15->setObjectName(QString::fromUtf8("vboxLayout15"));
-    catDirectories = new QListWidget(groupBox);
-    catDirectories->setObjectName(QString::fromUtf8("catDirectories"));
+        spacerItem4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout15->addWidget(catDirectories);
+        hboxLayout6->addItem(spacerItem4);
 
-    hboxLayout12 = new QHBoxLayout();
-    hboxLayout12->setObjectName(QString::fromUtf8("hboxLayout12"));
-    spacerItem13 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout12->addItem(spacerItem13);
+        vboxLayout11->addLayout(hboxLayout6);
 
-    catDirPlus = new QPushButton(groupBox);
-    catDirPlus->setObjectName(QString::fromUtf8("catDirPlus"));
 
-    hboxLayout12->addWidget(catDirPlus);
+        vboxLayout10->addWidget(directoriesGroupBox);
 
-    spacerItem14 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout12->addItem(spacerItem14);
+        hboxLayout5->addLayout(vboxLayout10);
 
-    catDirMinus = new QPushButton(groupBox);
-    catDirMinus->setObjectName(QString::fromUtf8("catDirMinus"));
+        fileTypesGroupBox = new QGroupBox(Catalog);
+        fileTypesGroupBox->setObjectName(QString::fromUtf8("fileTypesGroupBox"));
+        QSizePolicy sizePolicy5(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(fileTypesGroupBox->sizePolicy().hasHeightForWidth());
+        fileTypesGroupBox->setSizePolicy(sizePolicy5);
+        fileTypesGroupBox->setMaximumSize(QSize(140, 16777215));
+        vboxLayout12 = new QVBoxLayout(fileTypesGroupBox);
+        vboxLayout12->setObjectName(QString::fromUtf8("vboxLayout12"));
+        catTypes = new QListWidget(fileTypesGroupBox);
+        catTypes->setObjectName(QString::fromUtf8("catTypes"));
+        QSizePolicy sizePolicy6(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy6.setHorizontalStretch(0);
+        sizePolicy6.setVerticalStretch(0);
+        sizePolicy6.setHeightForWidth(catTypes->sizePolicy().hasHeightForWidth());
+        catTypes->setSizePolicy(sizePolicy6);
+        catTypes->setMaximumSize(QSize(16777215, 16777215));
 
-    hboxLayout12->addWidget(catDirMinus);
+        vboxLayout12->addWidget(catTypes);
 
-    spacerItem15 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        catTypesPlus = new QPushButton(fileTypesGroupBox);
+        catTypesPlus->setObjectName(QString::fromUtf8("catTypesPlus"));
+        catTypesPlus->setMaximumSize(QSize(16777215, 13123213));
 
-    hboxLayout12->addItem(spacerItem15);
+        horizontalLayout->addWidget(catTypesPlus);
 
+        catTypesMinus = new QPushButton(fileTypesGroupBox);
+        catTypesMinus->setObjectName(QString::fromUtf8("catTypesMinus"));
+        catTypesMinus->setMaximumSize(QSize(16777215, 13123123));
 
-    vboxLayout15->addLayout(hboxLayout12);
+        horizontalLayout->addWidget(catTypesMinus);
 
 
-    vboxLayout14->addWidget(groupBox);
+        vboxLayout12->addLayout(horizontalLayout);
 
-    spacerItem16 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        catCheckBinaries = new QCheckBox(fileTypesGroupBox);
+        catCheckBinaries->setObjectName(QString::fromUtf8("catCheckBinaries"));
 
-    vboxLayout14->addItem(spacerItem16);
+        vboxLayout12->addWidget(catCheckBinaries);
 
+        catCheckDirs = new QCheckBox(fileTypesGroupBox);
+        catCheckDirs->setObjectName(QString::fromUtf8("catCheckDirs"));
 
-    hboxLayout10->addLayout(vboxLayout14);
+        vboxLayout12->addWidget(catCheckDirs);
 
+        hboxLayout7 = new QHBoxLayout();
+        hboxLayout7->setObjectName(QString::fromUtf8("hboxLayout7"));
+        label_10 = new QLabel(fileTypesGroupBox);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
 
-    vboxLayout11->addLayout(hboxLayout10);
+        hboxLayout7->addWidget(label_10);
 
-    spacerItem17 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        catDepth = new QSpinBox(fileTypesGroupBox);
+        catDepth->setObjectName(QString::fromUtf8("catDepth"));
+        catDepth->setMaximum(100000);
+        catDepth->setValue(100);
 
-    vboxLayout11->addItem(spacerItem17);
+        hboxLayout7->addWidget(catDepth);
 
-    vboxLayout16 = new QVBoxLayout();
-    vboxLayout16->setObjectName(QString::fromUtf8("vboxLayout16"));
-    hboxLayout13 = new QHBoxLayout();
-    hboxLayout13->setObjectName(QString::fromUtf8("hboxLayout13"));
-    catRescan = new QPushButton(tab_2);
-    catRescan->setObjectName(QString::fromUtf8("catRescan"));
 
-    hboxLayout13->addWidget(catRescan);
+        vboxLayout12->addLayout(hboxLayout7);
 
-    spacerItem18 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout13->addItem(spacerItem18);
+        hboxLayout5->addWidget(fileTypesGroupBox);
 
-    catSize = new QLabel(tab_2);
-    catSize->setObjectName(QString::fromUtf8("catSize"));
+        vboxLayout13 = new QVBoxLayout();
+        vboxLayout13->setObjectName(QString::fromUtf8("vboxLayout13"));
 
-    hboxLayout13->addWidget(catSize);
+        hboxLayout5->addLayout(vboxLayout13);
 
-    spacerItem19 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    hboxLayout13->addItem(spacerItem19);
+        vboxLayout9->addLayout(hboxLayout5);
 
+        vboxLayout14 = new QVBoxLayout();
+        vboxLayout14->setObjectName(QString::fromUtf8("vboxLayout14"));
+        hboxLayout8 = new QHBoxLayout();
+        hboxLayout8->setObjectName(QString::fromUtf8("hboxLayout8"));
+        catRescan = new QPushButton(Catalog);
+        catRescan->setObjectName(QString::fromUtf8("catRescan"));
 
-    vboxLayout16->addLayout(hboxLayout13);
+        hboxLayout8->addWidget(catRescan);
 
-    catProgress = new QProgressBar(tab_2);
-    catProgress->setObjectName(QString::fromUtf8("catProgress"));
-    catProgress->setTextVisible(false);
-    catProgress->setOrientation(Qt::Horizontal);
+        spacerItem5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout16->addWidget(catProgress);
+        hboxLayout8->addItem(spacerItem5);
 
+        catSize = new QLabel(Catalog);
+        catSize->setObjectName(QString::fromUtf8("catSize"));
 
-    vboxLayout11->addLayout(vboxLayout16);
+        hboxLayout8->addWidget(catSize);
 
-    tabWidget->addTab(tab_2, QString());
-    tab_4 = new QWidget();
-    tab_4->setObjectName(QString::fromUtf8("tab_4"));
-    vboxLayout17 = new QVBoxLayout(tab_4);
-    vboxLayout17->setObjectName(QString::fromUtf8("vboxLayout17"));
-    hboxLayout14 = new QHBoxLayout();
-    hboxLayout14->setObjectName(QString::fromUtf8("hboxLayout14"));
-    groupBox_7 = new QGroupBox(tab_4);
-    groupBox_7->setObjectName(QString::fromUtf8("groupBox_7"));
-    groupBox_7->setMaximumSize(QSize(141, 16777215));
-    vboxLayout18 = new QVBoxLayout(groupBox_7);
-    vboxLayout18->setObjectName(QString::fromUtf8("vboxLayout18"));
-    plugList = new QListWidget(groupBox_7);
-    plugList->setObjectName(QString::fromUtf8("plugList"));
-    plugList->setSelectionRectVisible(false);
+        spacerItem6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    vboxLayout18->addWidget(plugList);
+        hboxLayout8->addItem(spacerItem6);
 
 
-    hboxLayout14->addWidget(groupBox_7);
+        vboxLayout14->addLayout(hboxLayout8);
 
-    plugBox = new QGroupBox(tab_4);
-    plugBox->setObjectName(QString::fromUtf8("plugBox"));
-    vboxLayout19 = new QVBoxLayout(plugBox);
-    vboxLayout19->setObjectName(QString::fromUtf8("vboxLayout19"));
-    spacerItem20 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        catProgress = new QProgressBar(Catalog);
+        catProgress->setObjectName(QString::fromUtf8("catProgress"));
+        catProgress->setMinimum(0);
+        catProgress->setMaximum(100);
+        catProgress->setValue(0);
+        catProgress->setTextVisible(false);
+        catProgress->setOrientation(Qt::Horizontal);
 
-    vboxLayout19->addItem(spacerItem20);
+        vboxLayout14->addWidget(catProgress);
 
 
-    hboxLayout14->addWidget(plugBox);
+        vboxLayout9->addLayout(vboxLayout14);
 
+        tabWidget->addTab(Catalog, QString());
+        Plugins = new QWidget();
+        Plugins->setObjectName(QString::fromUtf8("Plugins"));
+        vboxLayout15 = new QVBoxLayout(Plugins);
+        vboxLayout15->setObjectName(QString::fromUtf8("vboxLayout15"));
+        hboxLayout9 = new QHBoxLayout();
+        hboxLayout9->setObjectName(QString::fromUtf8("hboxLayout9"));
+        groupBox_7 = new QGroupBox(Plugins);
+        groupBox_7->setObjectName(QString::fromUtf8("groupBox_7"));
+        groupBox_7->setMaximumSize(QSize(141, 16777215));
+        vboxLayout16 = new QVBoxLayout(groupBox_7);
+        vboxLayout16->setObjectName(QString::fromUtf8("vboxLayout16"));
+        plugList = new QListWidget(groupBox_7);
+        plugList->setObjectName(QString::fromUtf8("plugList"));
+        plugList->setSelectionRectVisible(false);
 
-    vboxLayout17->addLayout(hboxLayout14);
+        vboxLayout16->addWidget(plugList);
 
-    tabWidget->addTab(tab_4, QString());
-    tab_3 = new QWidget();
-    tab_3->setObjectName(QString::fromUtf8("tab_3"));
-    vboxLayout20 = new QVBoxLayout(tab_3);
-    vboxLayout20->setObjectName(QString::fromUtf8("vboxLayout20"));
-    spacerItem21 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    vboxLayout20->addItem(spacerItem21);
+        hboxLayout9->addWidget(groupBox_7);
 
-    hboxLayout15 = new QHBoxLayout();
-    hboxLayout15->setObjectName(QString::fromUtf8("hboxLayout15"));
-    spacerItem22 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        plugBox = new QGroupBox(Plugins);
+        plugBox->setObjectName(QString::fromUtf8("plugBox"));
+        sizePolicy4.setHeightForWidth(plugBox->sizePolicy().hasHeightForWidth());
+        plugBox->setSizePolicy(sizePolicy4);
+        plugBox->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+        vboxLayout17 = new QVBoxLayout(plugBox);
+        vboxLayout17->setSpacing(0);
+        vboxLayout17->setContentsMargins(0, 0, 0, 0);
+        vboxLayout17->setObjectName(QString::fromUtf8("vboxLayout17"));
 
-    hboxLayout15->addItem(spacerItem22);
+        hboxLayout9->addWidget(plugBox);
 
-    aboutVer = new QLabel(tab_3);
-    aboutVer->setObjectName(QString::fromUtf8("aboutVer"));
-    QFont font;
-    font.setPointSize(10);
-    font.setBold(true);
-    font.setWeight(75);
-    aboutVer->setFont(font);
-    aboutVer->setWordWrap(false);
 
-    hboxLayout15->addWidget(aboutVer);
+        vboxLayout15->addLayout(hboxLayout9);
 
-    spacerItem23 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        tabWidget->addTab(Plugins, QString());
+        About = new QWidget();
+        About->setObjectName(QString::fromUtf8("About"));
+        verticalLayout = new QVBoxLayout(About);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        gridLayout_2 = new QGridLayout();
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setVerticalSpacing(22);
+        gridLayout_2->setContentsMargins(40, -1, 40, -1);
+        icon = new QLabel(About);
+        icon->setObjectName(QString::fromUtf8("icon"));
+        icon->setFrameShadow(QFrame::Plain);
+        icon->setPixmap(QPixmap(QString::fromUtf8(":/resources/launchy128.png")));
+        icon->setAlignment(Qt::AlignCenter);
+        icon->setMargin(11);
 
-    hboxLayout15->addItem(spacerItem23);
+        gridLayout_2->addWidget(icon, 0, 0, 1, 1);
 
+        aboutVer = new QLabel(About);
+        aboutVer->setObjectName(QString::fromUtf8("aboutVer"));
+        QFont font;
+        font.setFamily(QString::fromUtf8("Verdana"));
+        font.setPointSize(10);
+        font.setBold(true);
+        font.setWeight(75);
+        aboutVer->setFont(font);
+        aboutVer->setAlignment(Qt::AlignCenter);
+        aboutVer->setWordWrap(false);
 
-    vboxLayout20->addLayout(hboxLayout15);
+        gridLayout_2->addWidget(aboutVer, 1, 0, 1, 1);
 
-    hboxLayout16 = new QHBoxLayout();
-    hboxLayout16->setObjectName(QString::fromUtf8("hboxLayout16"));
-    spacerItem24 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        aboutText = new QLabel(About);
+        aboutText->setObjectName(QString::fromUtf8("aboutText"));
+        aboutText->setMinimumSize(QSize(481, 0));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("Verdana"));
+        aboutText->setFont(font1);
+        aboutText->setWordWrap(true);
+        aboutText->setOpenExternalLinks(true);
 
-    hboxLayout16->addItem(spacerItem24);
+        gridLayout_2->addWidget(aboutText, 2, 0, 1, 1);
 
-    label_2 = new QLabel(tab_3);
-    label_2->setObjectName(QString::fromUtf8("label_2"));
-    label_2->setWordWrap(false);
-    label_2->setOpenExternalLinks(true);
+        label_2 = new QLabel(About);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setMinimumSize(QSize(321, 0));
+        label_2->setFont(font1);
+        label_2->setTextFormat(Qt::RichText);
+        label_2->setAlignment(Qt::AlignCenter);
+        label_2->setWordWrap(false);
+        label_2->setOpenExternalLinks(true);
 
-    hboxLayout16->addWidget(label_2);
+        gridLayout_2->addWidget(label_2, 3, 0, 1, 1);
 
-    spacerItem25 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        aboutText_2 = new QLabel(About);
+        aboutText_2->setObjectName(QString::fromUtf8("aboutText_2"));
+        sizePolicy1.setHeightForWidth(aboutText_2->sizePolicy().hasHeightForWidth());
+        aboutText_2->setSizePolicy(sizePolicy1);
+        aboutText_2->setMinimumSize(QSize(211, 0));
+        aboutText_2->setFont(font1);
+        aboutText_2->setAlignment(Qt::AlignCenter);
+        aboutText_2->setWordWrap(true);
+        aboutText_2->setOpenExternalLinks(true);
 
-    hboxLayout16->addItem(spacerItem25);
+        gridLayout_2->addWidget(aboutText_2, 4, 0, 1, 1);
 
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    vboxLayout20->addLayout(hboxLayout16);
+        gridLayout_2->addItem(verticalSpacer, 5, 0, 1, 1);
 
-    spacerItem26 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-    vboxLayout20->addItem(spacerItem26);
+        verticalLayout->addLayout(gridLayout_2);
 
-    tabWidget->addTab(tab_3, QString());
+        tabWidget->addTab(About, QString());
 
-    vboxLayout->addWidget(tabWidget);
+        vboxLayout->addWidget(tabWidget);
 
-    hboxLayout17 = new QHBoxLayout();
-    hboxLayout17->setObjectName(QString::fromUtf8("hboxLayout17"));
-    spacerItem27 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        hboxLayout10 = new QHBoxLayout();
+        hboxLayout10->setObjectName(QString::fromUtf8("hboxLayout10"));
+        buttonBox = new QDialogButtonBox(OptionsDlg);
+        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
+        buttonBox->setOrientation(Qt::Horizontal);
+        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
 
-    hboxLayout17->addItem(spacerItem27);
+        hboxLayout10->addWidget(buttonBox);
 
-    buttonBox = new QDialogButtonBox(OptionsDlg);
-    buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-    buttonBox->setOrientation(Qt::Horizontal);
-    buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok);
 
-    hboxLayout17->addWidget(buttonBox);
+        vboxLayout->addLayout(hboxLayout10);
 
+#ifndef QT_NO_SHORTCUT
+        label_5->setBuddy(genHCenter);
+        label->setBuddy(genModifierBox);
+        label_11->setBuddy(genAutoSuggestDelay);
+        label_9->setBuddy(genMaxViewable);
+        label_8->setBuddy(genNumResults);
+        label_7->setBuddy(genNumHistory);
+        label_12->setBuddy(genCondensed);
+        label_6->setBuddy(genOpaqueness);
+        label_3->setBuddy(genFadeIn);
+        label_4->setBuddy(genFadeOut);
+        label_24->setBuddy(genProxyHostname);
+        label_25->setBuddy(genProxyPort);
+        label_10->setBuddy(catDepth);
+#endif // QT_NO_SHORTCUT
+        QWidget::setTabOrder(tabWidget, genAlwaysShow);
+        QWidget::setTabOrder(genAlwaysShow, genHideFocus);
+        QWidget::setTabOrder(genHideFocus, genAlwaysTop);
+        QWidget::setTabOrder(genAlwaysTop, genShowTrayIcon);
+        QWidget::setTabOrder(genShowTrayIcon, genHCenter);
+        QWidget::setTabOrder(genHCenter, genVCenter);
+        QWidget::setTabOrder(genVCenter, genShiftDrag);
+        QWidget::setTabOrder(genShiftDrag, genModifierBox);
+        QWidget::setTabOrder(genModifierBox, genKeyBox);
+        QWidget::setTabOrder(genKeyBox, genDecorateText);
+        QWidget::setTabOrder(genDecorateText, genCondensed);
+        QWidget::setTabOrder(genCondensed, genAutoSuggestDelay);
+        QWidget::setTabOrder(genAutoSuggestDelay, genMaxViewable);
+        QWidget::setTabOrder(genMaxViewable, genNumResults);
+        QWidget::setTabOrder(genNumResults, genNumHistory);
+        QWidget::setTabOrder(genNumHistory, genOpaqueness);
+        QWidget::setTabOrder(genOpaqueness, genFadeIn);
+        QWidget::setTabOrder(genFadeIn, genFadeOut);
+        QWidget::setTabOrder(genFadeOut, genUpdateCatalog);
+        QWidget::setTabOrder(genUpdateCatalog, genUpdateMinutes);
+        QWidget::setTabOrder(genUpdateMinutes, genShowHidden);
+        QWidget::setTabOrder(genShowHidden, genShowNetwork);
+        QWidget::setTabOrder(genShowNetwork, genUpdateCheck);
+        QWidget::setTabOrder(genUpdateCheck, genPortable);
+        QWidget::setTabOrder(genPortable, genProxyHostname);
+        QWidget::setTabOrder(genProxyHostname, genProxyPort);
+        QWidget::setTabOrder(genProxyPort, skinList);
+        QWidget::setTabOrder(skinList, catDirectories);
+        QWidget::setTabOrder(catDirectories, catDirPlus);
+        QWidget::setTabOrder(catDirPlus, catDirMinus);
+        QWidget::setTabOrder(catDirMinus, catTypes);
+        QWidget::setTabOrder(catTypes, catTypesPlus);
+        QWidget::setTabOrder(catTypesPlus, catTypesMinus);
+        QWidget::setTabOrder(catTypesMinus, catCheckBinaries);
+        QWidget::setTabOrder(catCheckBinaries, catCheckDirs);
+        QWidget::setTabOrder(catCheckDirs, catDepth);
+        QWidget::setTabOrder(catDepth, catRescan);
+        QWidget::setTabOrder(catRescan, plugList);
+        QWidget::setTabOrder(plugList, buttonBox);
 
-    vboxLayout->addLayout(hboxLayout17);
+        retranslateUi(OptionsDlg);
+        QObject::connect(buttonBox, SIGNAL(accepted()), OptionsDlg, SLOT(accept()));
+        QObject::connect(buttonBox, SIGNAL(rejected()), OptionsDlg, SLOT(reject()));
 
-    QWidget::setTabOrder(genAlwaysShow, genHideFocus);
-    QWidget::setTabOrder(genHideFocus, genAlwaysTop);
-    QWidget::setTabOrder(genAlwaysTop, genCondensed);
-    QWidget::setTabOrder(genCondensed, genCenter);
-    QWidget::setTabOrder(genCenter, genModifierBox);
-    QWidget::setTabOrder(genModifierBox, genKeyBox);
-    QWidget::setTabOrder(genKeyBox, genUpdateCheck);
-    QWidget::setTabOrder(genUpdateCheck, genShowHidden);
-    QWidget::setTabOrder(genShowHidden, genPortable);
-    QWidget::setTabOrder(genPortable, genFastIndex);
-    QWidget::setTabOrder(genFastIndex, genUpMinutes);
-    QWidget::setTabOrder(genUpMinutes, genOpaqueness);
-    QWidget::setTabOrder(genOpaqueness, genFadeIn);
-    QWidget::setTabOrder(genFadeIn, genFadeOut);
-    QWidget::setTabOrder(genFadeOut, genMaxViewable);
-    QWidget::setTabOrder(genMaxViewable, genNumResults);
-    QWidget::setTabOrder(genNumResults, catTypes);
-    QWidget::setTabOrder(catTypes, catTypeEdit);
-    QWidget::setTabOrder(catTypeEdit, catTypesPlus);
-    QWidget::setTabOrder(catTypesPlus, catTypesMinus);
-    QWidget::setTabOrder(catTypesMinus, catCheckBinaries);
-    QWidget::setTabOrder(catCheckBinaries, catCheckDirs);
-    QWidget::setTabOrder(catCheckDirs, catDepth);
-    QWidget::setTabOrder(catDepth, catDirectories);
-    QWidget::setTabOrder(catDirectories, catDirPlus);
-    QWidget::setTabOrder(catDirPlus, catDirMinus);
-    QWidget::setTabOrder(catDirMinus, catRescan);
-    QWidget::setTabOrder(catRescan, skinList);
-    QWidget::setTabOrder(skinList, plugList);
-    QWidget::setTabOrder(plugList, tabWidget);
-    QWidget::setTabOrder(tabWidget, buttonBox);
+        tabWidget->setCurrentIndex(0);
 
-    retranslateUi(OptionsDlg);
-    QObject::connect(buttonBox, SIGNAL(accepted()), OptionsDlg, SLOT(accept()));
-    QObject::connect(buttonBox, SIGNAL(rejected()), OptionsDlg, SLOT(reject()));
 
-    tabWidget->setCurrentIndex(0);
-
-
-    QMetaObject::connectSlotsByName(OptionsDlg);
+        QMetaObject::connectSlotsByName(OptionsDlg);
     } // setupUi
 
     void retranslateUi(QDialog *OptionsDlg)
     {
-    OptionsDlg->setWindowTitle(QApplication::translate("OptionsDlg", "Launchy options", 0, QApplication::UnicodeUTF8));
-    groupBox_4->setTitle(QApplication::translate("OptionsDlg", "User Interface", 0, QApplication::UnicodeUTF8));
-    genAlwaysShow->setText(QApplication::translate("OptionsDlg", "Always display Launchy window", 0, QApplication::UnicodeUTF8));
-    genHideFocus->setText(QApplication::translate("OptionsDlg", "Hide Launchy when it loses focus", 0, QApplication::UnicodeUTF8));
-    genAlwaysTop->setText(QApplication::translate("OptionsDlg", "Always on top", 0, QApplication::UnicodeUTF8));
-    genCondensed->setText(QApplication::translate("OptionsDlg", "Condense suggestion list", 0, QApplication::UnicodeUTF8));
-    genCenter->setText(QApplication::translate("OptionsDlg", "Always center Launchy", 0, QApplication::UnicodeUTF8));
-    label->setText(QApplication::translate("OptionsDlg", "Hotkey:", 0, QApplication::UnicodeUTF8));
-    groupBox_10->setTitle(QApplication::translate("OptionsDlg", "GUI", 0, QApplication::UnicodeUTF8));
-    label_6->setText(QApplication::translate("OptionsDlg", "Opaqueness", 0, QApplication::UnicodeUTF8));
-    label_3->setText(QApplication::translate("OptionsDlg", "Fade in time", 0, QApplication::UnicodeUTF8));
-    label_4->setText(QApplication::translate("OptionsDlg", "Fade out time", 0, QApplication::UnicodeUTF8));
-    label_9->setText(QApplication::translate("OptionsDlg", "Simultaneously visible alternate suggestions", 0, QApplication::UnicodeUTF8));
-    label_8->setText(QApplication::translate("OptionsDlg", "Max. number of alternate suggestions", 0, QApplication::UnicodeUTF8));
-    groupBox_6->setTitle(QApplication::translate("OptionsDlg", "System Options", 0, QApplication::UnicodeUTF8));
-    genUpdateCheck->setText(QApplication::translate("OptionsDlg", "Check for updates on startup", 0, QApplication::UnicodeUTF8));
-    genShowHidden->setText(QApplication::translate("OptionsDlg", "Show hidden files in browse mode", 0, QApplication::UnicodeUTF8));
-    genPortable->setText(QApplication::translate("OptionsDlg", "Portable mode (USB stick)", 0, QApplication::UnicodeUTF8));
-    genFastIndex->setText(QApplication::translate("OptionsDlg", "Use testing indexer?", 0, QApplication::UnicodeUTF8));
-    label_5->setText(QApplication::translate("OptionsDlg", "Minutes between catalog updates", 0, QApplication::UnicodeUTF8));
-    label_7->setText(QApplication::translate("OptionsDlg", "(0 for manual updates only)", 0, QApplication::UnicodeUTF8));
-    tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("OptionsDlg", "General", 0, QApplication::UnicodeUTF8));
-    groupBox_3->setTitle(QApplication::translate("OptionsDlg", "Select a skin", 0, QApplication::UnicodeUTF8));
-    groupBox_8->setTitle(QApplication::translate("OptionsDlg", "Author information", 0, QApplication::UnicodeUTF8));
-    authorInfo->setText(QString());
-    groupBox_9->setTitle(QApplication::translate("OptionsDlg", "Skin preview", 0, QApplication::UnicodeUTF8));
-    skinPreview->setText(QString());
-    tabWidget->setTabText(tabWidget->indexOf(Skins), QApplication::translate("OptionsDlg", "Skins", 0, QApplication::UnicodeUTF8));
-    groupBox_2->setTitle(QApplication::translate("OptionsDlg", "File Types", 0, QApplication::UnicodeUTF8));
-    catTypesPlus->setText(QApplication::translate("OptionsDlg", "+", 0, QApplication::UnicodeUTF8));
-    catTypesMinus->setText(QApplication::translate("OptionsDlg", "-", 0, QApplication::UnicodeUTF8));
-    catCheckBinaries->setText(QApplication::translate("OptionsDlg", "Executables", 0, QApplication::UnicodeUTF8));
-    catCheckDirs->setText(QApplication::translate("OptionsDlg", "Directories", 0, QApplication::UnicodeUTF8));
-    label_10->setText(QApplication::translate("OptionsDlg", "Depth:", 0, QApplication::UnicodeUTF8));
-    groupBox->setTitle(QApplication::translate("OptionsDlg", "Directories", 0, QApplication::UnicodeUTF8));
-    catDirPlus->setText(QApplication::translate("OptionsDlg", "+", 0, QApplication::UnicodeUTF8));
-    catDirMinus->setText(QApplication::translate("OptionsDlg", "-", 0, QApplication::UnicodeUTF8));
-    catRescan->setText(QApplication::translate("OptionsDlg", "Rescan Catalog", 0, QApplication::UnicodeUTF8));
-    catSize->setText(QApplication::translate("OptionsDlg", "Indexing 0 items", 0, QApplication::UnicodeUTF8));
-    tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("OptionsDlg", "Catalog", 0, QApplication::UnicodeUTF8));
-    groupBox_7->setTitle(QApplication::translate("OptionsDlg", "Available plugins", 0, QApplication::UnicodeUTF8));
-    plugBox->setTitle(QApplication::translate("OptionsDlg", "Plugin options", 0, QApplication::UnicodeUTF8));
-    tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("OptionsDlg", "Plugins", 0, QApplication::UnicodeUTF8));
-    aboutVer->setText(QString());
-    label_2->setText(QApplication::translate("OptionsDlg", "Launchy's official homepage is http://www.launchy.net/", 0, QApplication::UnicodeUTF8));
-    tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("OptionsDlg", "About Launchy", 0, QApplication::UnicodeUTF8));
-    Q_UNUSED(OptionsDlg);
+        OptionsDlg->setWindowTitle(QApplication::translate("OptionsDlg", "Launchy options", 0, QApplication::UnicodeUTF8));
+        groupBox_4->setTitle(QApplication::translate("OptionsDlg", "User Interface", 0, QApplication::UnicodeUTF8));
+        genAlwaysShow->setText(QApplication::translate("OptionsDlg", "Always display Launchy window", 0, QApplication::UnicodeUTF8));
+        genHideFocus->setText(QApplication::translate("OptionsDlg", "Hide Launchy when it loses focus", 0, QApplication::UnicodeUTF8));
+        genAlwaysTop->setText(QApplication::translate("OptionsDlg", "Always on top", 0, QApplication::UnicodeUTF8));
+        genShowTrayIcon->setText(QApplication::translate("OptionsDlg", "Show tray icon", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("OptionsDlg", "Always center Launchy", 0, QApplication::UnicodeUTF8));
+        genHCenter->setText(QApplication::translate("OptionsDlg", "horizontally", 0, QApplication::UnicodeUTF8));
+        genVCenter->setText(QApplication::translate("OptionsDlg", "vertically", 0, QApplication::UnicodeUTF8));
+        genShiftDrag->setText(QApplication::translate("OptionsDlg", "Only allow dragging whilst Shift is pressed", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("OptionsDlg", "&Hotkey:", 0, QApplication::UnicodeUTF8));
+        groupBox_10->setTitle(QApplication::translate("OptionsDlg", "Suggestion List", 0, QApplication::UnicodeUTF8));
+        genDecorateText->setText(QApplication::translate("OptionsDlg", "Underline matched text", 0, QApplication::UnicodeUTF8));
+        genAutoSuggestDelay->setSuffix(QApplication::translate("OptionsDlg", " ms", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("OptionsDlg", "Auto open delay", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("OptionsDlg", "Simultaneously visible suggestions", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("OptionsDlg", "Maximum number of suggestions", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("OptionsDlg", "Maximum number of history items", 0, QApplication::UnicodeUTF8));
+        genCondensed->clear();
+        genCondensed->insertItems(0, QStringList()
+         << QApplication::translate("OptionsDlg", "Name and path", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("OptionsDlg", "Path only", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("OptionsDlg", "Name only", 0, QApplication::UnicodeUTF8)
+        );
+        label_12->setText(QApplication::translate("OptionsDlg", "Suggestions display", 0, QApplication::UnicodeUTF8));
+        groupBox_11->setTitle(QApplication::translate("OptionsDlg", "Visual Effects", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("OptionsDlg", "Opaqueness", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("OptionsDlg", "Fade in time", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("OptionsDlg", "Fade out time", 0, QApplication::UnicodeUTF8));
+        groupBox_12->setTitle(QApplication::translate("OptionsDlg", "Internet Proxy", 0, QApplication::UnicodeUTF8));
+        label_24->setText(QApplication::translate("OptionsDlg", "Hostname", 0, QApplication::UnicodeUTF8));
+        label_25->setText(QApplication::translate("OptionsDlg", "Port", 0, QApplication::UnicodeUTF8));
+        genProxyPort->setInputMask(QString());
+        groupBox_6->setTitle(QApplication::translate("OptionsDlg", "System Options", 0, QApplication::UnicodeUTF8));
+        genUpdateCatalog->setText(QApplication::translate("OptionsDlg", "Auto update catalog every", 0, QApplication::UnicodeUTF8));
+        genUpdateMinutes->setSuffix(QApplication::translate("OptionsDlg", " minutes", 0, QApplication::UnicodeUTF8));
+        genShowHidden->setText(QApplication::translate("OptionsDlg", "Show hidden files in browse mode", 0, QApplication::UnicodeUTF8));
+        genShowNetwork->setText(QApplication::translate("OptionsDlg", "Show network in browse mode", 0, QApplication::UnicodeUTF8));
+        genUseWildcards->setText(QApplication::translate("OptionsDlg", "Allow wildcards in browse mode", 0, QApplication::UnicodeUTF8));
+        genUpdateCheck->setText(QApplication::translate("OptionsDlg", "Check for new versions of Launchy on startup", 0, QApplication::UnicodeUTF8));
+        genPortable->setText(QApplication::translate("OptionsDlg", "Portable mode (USB stick)", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(General), QApplication::translate("OptionsDlg", "General", 0, QApplication::UnicodeUTF8));
+        groupBox_3->setTitle(QApplication::translate("OptionsDlg", "Select a skin", 0, QApplication::UnicodeUTF8));
+        groupBox_8->setTitle(QApplication::translate("OptionsDlg", "Author information", 0, QApplication::UnicodeUTF8));
+        authorInfo->setText(QString());
+        groupBox_9->setTitle(QApplication::translate("OptionsDlg", "Skin preview", 0, QApplication::UnicodeUTF8));
+        skinPreview->setText(QString());
+        tabWidget->setTabText(tabWidget->indexOf(Skins), QApplication::translate("OptionsDlg", "Skins", 0, QApplication::UnicodeUTF8));
+        directoriesGroupBox->setTitle(QApplication::translate("OptionsDlg", "Directories", 0, QApplication::UnicodeUTF8));
+        catDirPlus->setText(QApplication::translate("OptionsDlg", "+", 0, QApplication::UnicodeUTF8));
+        catDirMinus->setText(QApplication::translate("OptionsDlg", "-", 0, QApplication::UnicodeUTF8));
+        fileTypesGroupBox->setTitle(QApplication::translate("OptionsDlg", "File Types", 0, QApplication::UnicodeUTF8));
+        catTypesPlus->setText(QApplication::translate("OptionsDlg", "+", 0, QApplication::UnicodeUTF8));
+        catTypesMinus->setText(QApplication::translate("OptionsDlg", "-", 0, QApplication::UnicodeUTF8));
+        catCheckBinaries->setText(QApplication::translate("OptionsDlg", "Include executables", 0, QApplication::UnicodeUTF8));
+        catCheckDirs->setText(QApplication::translate("OptionsDlg", "Include directories", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("OptionsDlg", "Depth:", 0, QApplication::UnicodeUTF8));
+        catRescan->setText(QApplication::translate("OptionsDlg", "Rescan Catalog", 0, QApplication::UnicodeUTF8));
+        catSize->setText(QApplication::translate("OptionsDlg", "Indexing 0 items", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(Catalog), QApplication::translate("OptionsDlg", "Catalog", 0, QApplication::UnicodeUTF8));
+        groupBox_7->setTitle(QApplication::translate("OptionsDlg", "Available plugins", 0, QApplication::UnicodeUTF8));
+        plugBox->setTitle(QApplication::translate("OptionsDlg", "Plugin options", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(Plugins), QApplication::translate("OptionsDlg", "Plugins", 0, QApplication::UnicodeUTF8));
+        icon->setText(QString());
+        aboutVer->setText(QString());
+        aboutText->setText(QApplication::translate("OptionsDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Verdana'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">I greatly enjoy developing Launchy, and I hope that you enjoy using it. It's free to use, but if you think Launchy is a worthwhile application, I would appreciate your </span><a href=\"http://www.launchy.net/#donate\"><span style=\" font-size:8pt; text-decoration: underline; color:#0000ff;\">donation.</span></a></p></body></html>", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("OptionsDlg", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Verdana'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\">Launchy's official homepage is <a href=\"http://www.launchy.net/\"><span style=\" text-decoration: underline; color:#0000ff;\">http://www.launchy.net/</span></a></p></body></html>", 0, QApplication::UnicodeUTF8));
+        aboutText_2->setText(QApplication::translate("OptionsDlg", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Verdana'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Credits</span></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Creator and Developer:  Josh Karlin</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; te"
+                        "xt-indent:0px;\"><span style=\" font-size:8pt;\">Developer: Simon Capewell</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+        tabWidget->setTabText(tabWidget->indexOf(About), QApplication::translate("OptionsDlg", "About Launchy", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
@@ -887,5 +1048,7 @@ public:
 namespace Ui {
     class OptionsDlg: public Ui_OptionsDlg {};
 } // namespace Ui
+
+QT_END_NAMESPACE
 
 #endif // UI_OPTIONS_H

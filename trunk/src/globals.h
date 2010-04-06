@@ -1,6 +1,6 @@
 /*
 Launchy: Application Launcher
-Copyright (C) 2007  Josh Karlin
+Copyright (C) 2007-2009  Josh Karlin, Simon Capewell
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,28 +20,29 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <QWidget>
-#include <QSettings>
-#include "catalog_builder.h"
 
-#define LAUNCHY_VERSION 212
-#define LAUNCHY_VERSION_STRING "2.1.2"
+#include "catalog_builder.h"
+#include "SettingsManager.h"
+
+#define LAUNCHY_VERSION 250
+#define LAUNCHY_VERSION_STRING "2.5.0"
 
 #define HASH_LAUNCHY 0
+#define HASH_HISTORY 1
+#define HASH_LAUNCHYFILE 2
 #define LABEL_FILE 0
+#define LABEL_AUTOSUGGEST 1
+#define LABEL_HISTORY 2
 
-extern QWidget* gMainWidget;
+class LaunchyWidget;
+class PlatformBase;
+
+extern PlatformBase* platform;
+extern LaunchyWidget* gMainWidget;
 extern QSettings* gSettings;
-extern CatBuilder* gBuilder;
-extern QString gNativeSep;
-
-extern QString gSearchTxt;
-
-void log(QString str);
-
-
-
-
+extern SettingsManager settings;
+extern shared_ptr<CatalogBuilder> gBuilder;
+extern QString gSearchText;
 
 
 #endif

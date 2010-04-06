@@ -1,6 +1,6 @@
 /*
 Launchy: Application Launcher
-Copyright (C) 2007  Josh Karlin
+Copyright (C) 2007-2009  Josh Karlin, Simon Capewell
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,101 +19,59 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef PLATFORM_BASE_H
 #define PLATFORM_BASE_H
-#include <QtGui>
-#include <QWidget>
-#include <QPoint>
-#include <QStringList>
-#include <QList>
-#include <QFileIconProvider>
-#include <QObject>
-#include <QProcess>
-#include <QDebug>
+
+#include <QtGui> // OSX needs this
+#include "Directory.h"
 #include "catalog.h"
-#include "options.h"
+#include "globals.h"
 
-class PlatformBase {
+
+class PlatformBase : public QApplication
+{
 public:
-	PlatformBase() {
-		icons = NULL;
+	PlatformBase(int& argc, char** argv) : 
+	  QApplication(argc, argv)
+	{
+		platform = this;
 	}
 
-	virtual ~PlatformBase() {
+	virtual ~PlatformBase()
+	{
+		if (icons)
+		{
+			delete icons;
+			icons = NULL;
+		}
 	}
 
-	QFileIconProvider* icons;
+	QIcon icon(const QFileInfo& info) { return icons->icon(info); }
+	QIcon icon(QFileIconProvider::IconType type) { return icons->icon(type); }
+	virtual void setPreferredIconSize(int size) = 0;
 
-	virtual QApplication* init(int & argc, char** argv) { 
-		return new QApplication(argc, argv);
-	}
-
-	virtual QWidget* getAlphaWidget() = 0;
-
-	virtual QIcon icon(const QFileInfo & info) { return icons->icon(info); }
-	virtual QString GetSettingsDirectory() = 0;
-	virtual QList<Directory> GetInitialDirs() = 0;
-	virtual void AddToNotificationArea() = 0;
-	virtual void RemoveFromNotificationArea() = 0;
-	virtual bool Execute(QString path, QString args) { 
-	    path = path ; args = args; // warning remover
-	    return false; 
-	}
-
-	virtual bool isAlreadyRunning() = 0;
-
-	QKeySequence oldKey;
+	virtual QList<Directory> getDefaultCatalogDirectories() = 0;
+	virtual bool isAlreadyRunning() const = 0;
+	virtual void sendInstanceCommand(int command) { Q_UNUSED(command); }
 
 	// Set hotkey
-	virtual bool SetHotkey(const QKeySequence& key, QObject* receiver, const char* slot) = 0;
+	virtual QKeySequence getHotkey() const = 0;
+	virtual bool setHotkey(const QKeySequence& key, QObject* receiver, const char* slot) = 0;
 
 	// Need to alter an indexed item?  e.g. .desktop files
-	virtual void alterItem(CatItem*) {return;};
+	virtual void alterItem(CatItem*) { }
+	virtual QHash<QString, QList<QString> > getDirectories() = 0;
+	virtual QString expandEnvironmentVars(QString txt) = 0;
 
-	// Alpha border functions	
-	virtual bool SupportsAlphaBorder() { return false; }
-	virtual bool CreateAlphaBorder(QWidget* w, QString ImageName) { w = w; ImageName = ImageName; return false; }
-	virtual void DestroyAlphaBorder() { return; }
-	virtual void MoveAlphaBorder(QPoint pos) { pos = pos; return; }
-	virtual void HideAlphaBorder() { return; }
-	virtual void ShowAlphaBorder() { return; }
-	virtual void SetAlphaOpacity(double) { return; }
-	//virtual void KillLaunchys() = 0;
-	virtual QHash<QString, QList<QString> > GetDirectories() = 0;
-
-	virtual QString expandEnvironmentVars(QString txt)
-	{	    
-	    QStringList list = QProcess::systemEnvironment();
-	    txt.replace('~', "$HOME$");
-	    QString delim("$");
-	    QString out = "";
-	    int curPos = txt.indexOf(delim, 0);
-	    if (curPos == -1) return txt;
-	    
-	    while(curPos != -1) {
-		int nextPos = txt.indexOf("$", curPos+1);
-		if (nextPos == -1) {
-		    out += txt.mid(curPos+1);
-		    break;
-		}
-		QString var = txt.mid(curPos+1, nextPos-curPos-1);
-		bool found = false;
-		foreach(QString s, list) {
-		    if (s.startsWith(var, Qt::CaseInsensitive)) {
-			found = true;
-			out += s.mid(var.length()+1);
-			break;
-		    }			
-		}
-		if (!found)
-		    out += "$" + var;
-		curPos = nextPos;
-	    }
-	    return out;
-	}
+	virtual bool supportsAlphaBorder() const { return false; }
+	virtual bool getComputers(QList<QString>& computers) const { Q_UNUSED(computers); return false; }
 
 
+protected:
+	QFileIconProvider* icons;
+	QKeySequence hotkey;
 };
 
- Q_DECLARE_INTERFACE(PlatformBase,
-                     "net.launchy.PlatformBase/1.0")
+
+QApplication* createApplication(int& argc, char** argv);
+
 
 #endif

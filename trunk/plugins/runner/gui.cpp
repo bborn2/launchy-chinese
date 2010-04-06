@@ -17,28 +17,30 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include "precompiled.h"
 #include "gui.h"
 #include "runner.h"
-#include <QHeaderView>
+
 
 #define ROW_PADDING 6
+
 
 Gui::Gui(QWidget* parent) 
 	: QWidget(parent)
 {
 	setupUi(this);
-	QSettings* settings = *grunnerInstance->settings;
+	QSettings* settings = *gRunnerInstance->settings;
 	if (settings == NULL) return;
 
-	
-	// Stretch the last column of the table
-	table->horizontalHeader()->setStretchLastSection(true);
-//	table->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch); //  column 0
+	// Stretch the centre column of the table
+	table->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch); //  column 1
 
-	// Read in the array of websites from options
+	// Read in the array of programs from options
 	table->setSortingEnabled(false);
+	table->setItemDelegateForColumn(1, &delegate);
 	int count = settings->beginReadArray("runner/cmds");
 	table->setRowCount(count);
+
 	for(int i = 0; i < count; ++i) {
 		settings->setArrayIndex(i);
 		table->setItem(i, 0, new QTableWidgetItem(settings->value("name").toString()));
@@ -49,13 +51,15 @@ Gui::Gui(QWidget* parent)
 	settings->endArray();
 	table->setSortingEnabled(true);
 
+	connect(table, SIGNAL(dragEnter(QDragEnterEvent*)), this, SLOT(dragEnter(QDragEnterEvent*)));
+	connect(table, SIGNAL(drop(QDropEvent*)), this, SLOT(drop(QDropEvent*)));
 	connect(tableNew, SIGNAL(clicked(bool)), this, SLOT(newRow(void)));
 	connect(tableRemove, SIGNAL(clicked(bool)), this, SLOT(remRow(void)));
 }
 
 void Gui::writeOptions()
 {
-	QSettings* settings = *grunnerInstance->settings;
+	QSettings* settings = *gRunnerInstance->settings;
 	if (settings == NULL) return;
 
 	settings->beginWriteArray("runner/cmds");
@@ -75,13 +79,61 @@ void Gui::writeOptions()
 
 void Gui::newRow() 
 {
-	table->insertRow(table->rowCount());
+	bool sort = table->isSortingEnabled();
+	if (sort)
+		table->setSortingEnabled(false);
+	appendRow(QString(), QString(), QString());
 	table->setCurrentCell(table->rowCount()-1, 0);
-	table->verticalHeader()->resizeSection(table->rowCount()-1, table->verticalHeader()->fontMetrics().height() + ROW_PADDING);
+	table->editItem(table->currentItem());
+	table->setSortingEnabled(sort);
 }
 
 void Gui::remRow()
 {
-	if (table->currentRow() != -1)
-		table->removeRow(table->currentRow());
+	int row = table->currentRow();
+	if (row != -1)
+	{
+		table->removeRow(row);
+		if (row >= table->rowCount())
+			row = table->rowCount() - 1;
+		table->setCurrentCell(row, table->currentColumn());
+	}
+}
+
+void Gui::dragEnter(QDragEnterEvent *event)
+{
+	const QMimeData* mimeData = event->mimeData();
+	if (mimeData && mimeData->hasUrls())
+		event->acceptProposedAction();
+}
+
+void Gui::drop(QDropEvent *event)
+{
+	const QMimeData* mimeData = event->mimeData();
+	if (mimeData && mimeData->hasUrls()) {
+		foreach(QUrl url, mimeData->urls()) {
+			QFileInfo info(url.toLocalFile());
+			if(info.exists()) {
+				table->setSortingEnabled(false);
+				if (info.isSymLink()) {
+					QFileInfo target(info.symLinkTarget());
+					appendRow(info.baseName(), QDir::toNativeSeparators(target.filePath()), "");
+				}
+				else
+					appendRow(info.baseName(), QDir::toNativeSeparators(info.filePath()), "");
+				table->setCurrentCell(table->rowCount()-1, 0);
+				table->setSortingEnabled(true);
+			}
+		}
+	}
+}
+
+void Gui::appendRow(const QString& name, const QString& file, const QString& args)
+{
+	int row = table->rowCount();
+	table->insertRow(row);
+	table->setItem(row, 0, new QTableWidgetItem(name));
+	table->setItem(row, 1, new QTableWidgetItem(file));
+	table->setItem(row, 2, new QTableWidgetItem(args));
+	table->verticalHeader()->resizeSection(row, table->verticalHeader()->fontMetrics().height() + ROW_PADDING);
 }

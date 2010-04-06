@@ -20,16 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef gcalc_H
 #define gcalc_H
 
-#include <QtGui>
-#include <QUrl>
-#include <QFile>
-#include <QRegExp>
-#include <QHttp>
-#include <QEventLoop>
-#include <QBuffer>
-#include <QString>
+
 #include "plugin_interface.h"
 
+#include <QtNetwork>
 
 class Process : public QObject {
 	Q_OBJECT
@@ -38,12 +32,18 @@ public:
 	QHttp http;
 	QBuffer resBuffer;
 	QString result;
-	QEventLoop loop; 
-	Process() {}
-	Process(QString str) : query(str) {}
+	QEventLoop loop;
+	Process(QString url, QString matchExpression);
 	void run();
 public slots:
 	void httpGetFinished(bool error);
+
+private:
+	QString url;
+	QString matchExpression;
+
+	int id;
+	static int currentId;
 };
 
 class gcalcPlugin : public QObject, public PluginInterface
@@ -51,7 +51,7 @@ class gcalcPlugin : public QObject, public PluginInterface
 
 	Q_OBJECT
 	Q_INTERFACES(PluginInterface)
-	QRegExp* reg;
+//	QRegExp* reg;
 
 public:
 	uint HASH_gcalc;
@@ -59,8 +59,9 @@ public:
 public:
 	gcalcPlugin() {
 		HASH_gcalc = qHash(QString("gcalc"));
+//		reg = NULL;
 	}
-	~gcalcPlugin() {delete reg;}
+	~gcalcPlugin() { /*if (reg) delete reg; */}
 	int msg(int msgId, void* wParam = NULL, void* lParam = NULL); 
 	void setPath(QString * path);
 	void getID(uint*);

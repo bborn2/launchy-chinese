@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef controly_H
 #define controly_H
 
-#include <QHash>
 #include "plugin_interface.h"
-
+#include "gui.h"
+#include "fhoicon.h"
 
 
 class controlyPlugin : public QObject, public PluginInterface
@@ -30,30 +30,44 @@ class controlyPlugin : public QObject, public PluginInterface
 	Q_OBJECT
 	Q_INTERFACES(PluginInterface)
 
-
-public:
+private:
 	uint HASH_controly;
-	QHash<QString, QString> cache;
+
+	FhoIconCreator iconCreator;
+
+	#ifdef WITH_GUI
+		Gui* gui;
+	#endif
 
 public:
-	controlyPlugin() {
+	controlyPlugin();
+	~controlyPlugin();
 
-		HASH_controly = qHash(QString("controly"));
-	}
-	~controlyPlugin() {}
 	int msg(int msgId, void* wParam = NULL, void* lParam = NULL); 
 
+private:
 	void getID(uint*);
+	void setPath(QString * path);
 	void getName(QString*);
 	void getCatalog(QList<CatItem>*);
 	void init();
 	QString getIcon();
+	QString getIconPath() const;
 	void getApps(QList<CatItem>* items);
-	void getResults(QList<InputData>* id, QList<CatItem>* results);
-	int launchItem(QList<InputData>* id, CatItem* item);
+	bool isMatch(QString text1, QString text2);
+	void addCatItem(QString text, QList<CatItem>* results, QString fullName, QString shortName);
+	void updateUsage(CatItem& item);
+	void getResults(QList<InputData>* inputData, QList<CatItem>* results);
+	int launchItem(QList<InputData>* inputData, CatItem* item);
+
+	#ifdef WITH_GUI
+		void doDialog(QWidget* parent, QWidget**);
+		void endDialog(bool accept);
+	#endif
+
+	QString libPath;
 };
 
-
-
+extern controlyPlugin* gControlyInstance;
 
 #endif
