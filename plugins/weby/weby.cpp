@@ -17,127 +17,203 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include <QtGui>
-#include <QUrl>
-#include <QFile>
-#include <QRegExp>
-#include <QTextCodec>
-
-#ifdef Q_WS_WIN
-#include <windows.h>
-#include <shlobj.h>
-#include <tchar.h>
-
-#endif
-
+#include "precompiled.h"
 #include "weby.h"
+#include "IconCache.h"
 #include "gui.h"
 
 WebyPlugin* gWebyInstance = NULL;
+
+int Suggest::currentId = 0;
+
+Suggest::Suggest()
+{
+	connect(&http, SIGNAL(done(bool)), this, SLOT(httpGetFinished(bool)));
+}
+
+
+void Suggest::run(QString url, QString query)
+{
+	this->query = query;
+	url.replace("%s", QUrl::toPercentEncoding(query));
+	QUrl u = QUrl::fromPercentEncoding(url.toAscii());
+
+	http.setHost(u.host(), u.port(80));
+	http.get(u.toEncoded(QUrl::RemoveScheme | QUrl::RemoveAuthority));
+	id = ++currentId;
+	loop.exec();
+}
+
+
+void Suggest::httpGetFinished(bool error)
+{
+	if (id == currentId)
+	{
+		if (query.count() > 0)
+		{
+			results << query;
+		}
+
+		if (!error)
+		{
+			QRegExp regex("\\[.*\\[(.*)\\]\\]");
+			QRegExp rx("\"((?:[^\\\\\"]|\\\\\")*)\"");
+
+			QString text = http.readAll();
+			if (regex.indexIn(text) != -1)
+			{
+				QString csv = regex.cap(1);
+
+				int pos = 0;
+				while ((pos = rx.indexIn(csv, pos)) != -1)
+				{
+					QString result = rx.cap(1);
+					if (result.count() > 0)
+						results << result;
+
+					pos += rx.matchedLength();
+				}
+			}
+		}
+		loop.exit();
+	}
+}
+
+
+
 
 void WebyPlugin::init()
 {
 	if (gWebyInstance == NULL)
 		gWebyInstance = this;
 
-
-
 	QSettings* set = *settings;
-	if ( set->value("weby/version", 0.0).toDouble() == 0.0 ) {
+
+	// get config / settings directory (base for 'temporary' icon cache dir)
+	QString iniFilename = set->fileName();
+	QFileInfo info(iniFilename);
+	iconCachePath = info.absolutePath() + "/weby-icon-cache/";
+	iconCache = new IconCache(iconCachePath);
+	iconCache->setParent(this);
+	connect(iconCache, SIGNAL(findIcon(QUrl)), iconCache, SLOT(query(QUrl)));
+
+	double version = set->value("weby/version",0.0).toDouble();
+
+	if ( version == 0.0 )
+	{
+		int i = 0;
 		set->beginWriteArray("weby/sites");
-		set->setArrayIndex(0);
+
+		set->setArrayIndex(i++);
 		set->setValue("name", "Google");
-		set->setValue("base", "http://www.google.com/");
-		set->setValue("query", "search?source=launchy&q=%s");
-		set->setValue("default", true);
+		set->setValue("query", "http://www.google.com/search?source=launchy&q=%1");
+		//set->setValue("suggest", "http://suggestqueries.google.com/complete/search?output=firefox&q=%1");
+		//set->setValue("default", true);
 
-		set->setArrayIndex(1);
-		set->setValue("name", "Live Search");
-		set->setValue("base", "http://search.live.com/");
-		set->setValue("query", "results.aspx?q=%s");
+		set->setArrayIndex(i++);
+		set->setValue("name", "Bing");
+		set->setValue("query", "http://www.bing.com/search?q=%1");
 
-		set->setArrayIndex(2);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Yahoo");
-		set->setValue("base", "http://search.yahoo.com/");
-		set->setValue("query", "search?p=%s");
+		set->setValue("query", "http://search.yahoo.com/search?p=%1");
+		//set->setValue("suggest", "http://ff.search.yahoo.com/gossip?output=fxjson&command=%1");
 
-		set->setArrayIndex(3);
-		set->setValue("name", "MSN");
-		set->setValue("base", "http://search.msn.com/");
-		set->setValue("query", "results.aspx?q=%s");
-
-		set->setArrayIndex(4);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Weather");
-		set->setValue("base", "http://www.weather.com/");
-		set->setValue("query", "weather/local/%s");	
+		set->setValue("query", "http://www.weather.com/weather/local/%1");	
 
-		set->setArrayIndex(5);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Amazon");
-		set->setValue("base", "http://www.amazon.com/");
-		set->setValue("query", "gp/search/?keywords=%s&index=blended");
-		//		set->setValue("query", "s/ref=nb_ss_gw/104-5604144-0028745?url=search-alias%3Daps&field-keywords=%s");
+		set->setValue("query", "http://www.amazon.com/gp/search?keywords=%1&index=blended");
 
-		set->setArrayIndex(6);
+		set->setArrayIndex(i++);
 		set->setValue("name", "YouTube");
-		set->setValue("base", "http://www.youtube.com/");
-		set->setValue("query", "results?search_query=%s");
+		set->setValue("query", "http://www.youtube.com/results?search_query=%1");
 
-		set->setArrayIndex(7);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Wikipedia");
-		set->setValue("base", "http://en.wikipedia.com/");
-		set->setValue("query", "wiki/Special:Search?search=%s&fulltext=Search");
+		set->setValue("query", "http://en.wikipedia.org/wiki/Special:Search?search=%1&fulltext=Search");
+		//set->setValue("suggest", "http://en.wikipedia.org/w/api.php?action=opensearch&search=%1");
 
-		set->setArrayIndex(8);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Dictionary");
-		set->setValue("base", "http://www.dictionary.com/");
-		set->setValue("query", "browse/%s");		
+		set->setValue("query", "http://dictionary.reference.com/browse/%1");		
 
-		set->setArrayIndex(9);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Thesaurus");
-		set->setValue("base", "http://www.thesaurus.com/");
-		set->setValue("query", "browse/%s");		
+		set->setValue("query", "http://thesaurus.reference.com/browse/%1");		
 
-		set->setArrayIndex(10);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Netflix");
-		set->setValue("base", "http://www.netflix.com/");
-		set->setValue("query", "Search?v1=%s");		
+		set->setValue("query", "http://www.netflix.com/Search?v1=%1");		
 
-		set->setArrayIndex(11);
+		set->setArrayIndex(i++);
 		set->setValue("name", "MSDN");
-		set->setValue("base", "http://search.msdn.microsoft.com/");
-		set->setValue("query", "search/default.aspx?siteId=0&tab=0&query=%s");
+		set->setValue("query", "http://search.msdn.microsoft.com/search/default.aspx?siteId=0&tab=0&query=%1");
 
-		set->setArrayIndex(11);
+		set->setArrayIndex(i++);
 		set->setValue("name", "E-Mail");
-		set->setValue("base", "mailto:");
-		set->setValue("query", "%s");
+		set->setValue("query", "mailto:%1");
 
-		set->setArrayIndex(12);
+		set->setArrayIndex(i++);
 		set->setValue("name", "IMDB");
-		set->setValue("base", "http://www.imdb.com/");
-		set->setValue("query", "find?s=all&q=%s");
+		set->setValue("query", "http://www.imdb.com/find?s=all&q=%1");
 
-		set->setArrayIndex(13);
+		set->setArrayIndex(i++);
 		set->setValue("name", "Maps");
-		set->setValue("base", "http://maps.google.com/");
-		set->setValue("query", "maps?f=q&hl=en&geocode=&q=%s&ie=UTF8&z=12&iwloc=addr&om=1");
+		set->setValue("query", "http://maps.google.com/maps?f=q&hl=en&geocode=&q=%1&ie=UTF8&z=12&iwloc=addr&om=1");
+
 		set->endArray();
 	}
-	set->setValue("weby/version", 2.0);
 
 	// Read in the array of websites
 	sites.clear();
+
 	int count = set->beginReadArray("weby/sites");
-	for(int i = 0; i < count; ++i) {
+	for (int i = 0; i < count; ++i)
+	{
 		set->setArrayIndex(i);
 		WebySite s;
-		s.base = set->value("base").toString();
 		s.name = set->value("name").toString();
 		s.query = set->value("query").toString();
+		s.suggest = set->value("suggest").toString();
 		s.def = set->value("default", false).toBool();
+
+		// Ditched the 'base' value between 1.0 and 2.0
+		// Also replaced %s with %1,%2,%3...
+		if (version == 2.0) {
+			s.query.replace("%s","%1");
+			s.query = set->value("base").toString() + s.query;			
+/*
+			Out of scope for 2.2
+			if (s.name == "Google")
+				s.suggest = "http://suggestqueries.google.com/complete/search?output=firefox&q=%1";
+			else if (s.name == "Yahoo")
+				s.suggest = "http://ff.search.yahoo.com/gossip?output=fxjson&command=%1";
+			else if (s.name == "Wikipedia")
+				s.suggest = "http://en.wikipedia.org/w/api.php?action=opensearch&search=%1";
+*/
+		}
+		
 		sites.push_back(s);
 	}
 	set->endArray();
+
+	// Save any upgrades we made from 2.0
+	if (version == 2.0) {
+		set->beginWriteArray("weby/sites");
+		for(int i = 0; i < sites.count(); i++) {
+			set->setArrayIndex(i);
+			set->setValue("name", sites[i].name);
+			set->setValue("query", sites[i].query);
+			set->setValue("suggest", sites[i].suggest);
+			set->setValue("default", sites[i].def);
+		}
+		set->endArray();
+	}
+	
+	set->setValue("weby/version", 2.2);
 }
 
 void WebyPlugin::getID(uint* id)
@@ -150,85 +226,101 @@ void WebyPlugin::getName(QString* str)
 	*str = "Weby";
 }
 
-void WebyPlugin::getLabels(QList<InputData>* id)
+void WebyPlugin::getLabels(QList<InputData>* inputData)
 {
-	if (id->count() > 1)
+	if (inputData->count() > 1)
 		return;
 
 	// Apply a "website" label if we think it's a website
-	const QString & text = id->last().getText();
+	const QString & text = inputData->last().getText();
 
-	if (text.contains("http://", Qt::CaseInsensitive))
-		id->last().setLabel(HASH_WEBSITE);
-	else if (text.contains("https://", Qt::CaseInsensitive)) 
-		id->last().setLabel(HASH_WEBSITE);
-	else if (text.contains(".com", Qt::CaseInsensitive)) 
-		id->last().setLabel(HASH_WEBSITE);
-	else if (text.contains(".net", Qt::CaseInsensitive))
-		id->last().setLabel(HASH_WEBSITE);
-	else if (text.contains(".org", Qt::CaseInsensitive))
-		id->last().setLabel(HASH_WEBSITE);
-	else if (text.contains("www.", Qt::CaseInsensitive))
-		id->last().setLabel(HASH_WEBSITE);
+	QString defaultMatchExpression = "^(http|https|ftp)://|^www.|.com|.co.[a-z]{2,}|.net|.org";
+	QString matchExpression = (*settings)->value("weby/UrlRegExp", defaultMatchExpression).toString();
+	QRegExp regex(matchExpression);
+	if (!regex.isValid())
+	{
+		qDebug() << QString("Settings match expression \"%1\" is invalid. Using default.").arg(matchExpression);
+		regex = QRegExp(defaultMatchExpression);
+	}
+	if (regex.indexIn(text) != -1)
+	{
+		inputData->last().setLabel(HASH_WEBSITE);
+	}
 }
 
 
 
-void WebyPlugin::getResults(QList<InputData>* id, QList<CatItem>* results)
+void WebyPlugin::getResults(QList<InputData>* inputData, QList<CatItem>* results)
 {
-	if (id->last().hasLabel(HASH_WEBSITE)) {
-		const QString & text = id->last().getText();
+	if (inputData->last().hasLabel(HASH_WEBSITE))
+	{
+		const QString & text = inputData->last().getText();
 		// This is a website, create an entry for it
-		results->push_front(CatItem(text + ".weby", text, HASH_WEBY, getIcon()));
-	}
-
-	if (id->count() > 1 && (unsigned int) id->first().getTopResult().id == HASH_WEBY) {
-		const QString & text = id->last().getText();
-		// This is user search text, create an entry for it
-		results->push_front(CatItem(text + ".weby", text, HASH_WEBY, getIcon()));
-	}
-
-	// If we don't have any results, add default
-	if (results->size() == 0 && id->count() <= 1) {
-		const QString & text = id->last().getText();
-		if (text != "") {
-			QString name = getDefault().name;
-			if (name != "")
-				results->push_back(CatItem(text + ".weby", name, HASH_WEBY, getIcon()));
+		if (!text.trimmed().isEmpty())
+		{
+			results->push_front(CatItem(text + ".weby", text, HASH_WEBY, getIcon()));
 		}
 	}
 
+	if (inputData->count() > 1 && (unsigned int)inputData->first().getTopResult().id == HASH_WEBY)
+	{
+		const QString & text = inputData->last().getText();
+		// This is user search text, create an entry for it
+		QString suggestUrl;
+		CatItem* item = &inputData->first().getTopResult();
 
+		foreach(WebySite site, sites)
+		{
+			if (item->shortName == site.name)
+			{
+				suggestUrl = site.suggest;
+				break;
+			}
+		}
+
+		if (!suggestUrl.isEmpty() && !text.trimmed().isEmpty())
+		{
+			// query the web
+			Suggest suggest;
+			suggest.run(suggestUrl, text);
+
+			foreach(QString res, suggest.results)
+			{
+				results->push_back(CatItem(res + ".weby", res, HASH_WEBY, item->icon));
+			}
+		}
+		else
+		{
+			results->push_front(CatItem(text + ".weby", text, HASH_WEBY, item->icon));
+		}
+	}
+
+	// If we don't have any results, add default
+	if (results->size() == 0 && inputData->count() <= 1)
+	{
+		const QString & text = inputData->last().getText();
+		if (!text.trimmed().isEmpty())
+		{
+			QString name = getDefault().name;
+			if (name != "")
+			{
+				inputData->first().setLabel(HASH_DEFAULTSEARCH);
+				results->push_back(CatItem(text + ".weby", name, HASH_WEBY, getIcon()));
+			}
+		}
+	}
 }
+
 
 #ifdef Q_WS_WIN
-BOOL GetShellDir(int iType, QString& szPath)
+
+QString GetShellDirectory(int type)
 {
-	QString tmpp = "shell32.dll";
-	HINSTANCE hInst = ::LoadLibrary( (LPCTSTR) tmpp.utf16() );
-	if ( NULL == hInst )
-	{
-		return FALSE;
-	}
-
-	HRESULT (__stdcall *pfnSHGetFolderPath)( HWND, int, HANDLE, DWORD, LPWSTR );
-
-
-	pfnSHGetFolderPath = reinterpret_cast<HRESULT (__stdcall *)( HWND, int, HANDLE, DWORD, LPWSTR )>( GetProcAddress( hInst,"SHGetFolderPathW" ) );
-
-	if ( NULL == pfnSHGetFolderPath )
-	{
-		FreeLibrary( hInst ); // <-- here
-		return FALSE;
-	}
-
-	TCHAR tmp[_MAX_PATH];
-	pfnSHGetFolderPath( NULL, iType, NULL, 0, tmp );
-	szPath = QString::fromUtf16((const ushort*)tmp);
-	FreeLibrary( hInst ); // <-- and here
-	return TRUE;
-	return 0;
+	wchar_t buffer[_MAX_PATH];
+	SHGetFolderPath(NULL, type, NULL, 0, buffer);
+	return QString::fromUtf16(buffer);
 }
+
 
 void WebyPlugin::indexIE(QString path, QList<CatItem>* items)
 {
@@ -236,64 +328,73 @@ void WebyPlugin::indexIE(QString path, QList<CatItem>* items)
 	QString dir = qd.absolutePath();
 	QStringList dirs = qd.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
 
-	for (int i = 0; i < dirs.count(); ++i) {
+	for (int i = 0; i < dirs.count(); ++i)
+	{
 		QString cur = dirs[i];
-		if (cur.contains(".lnk")) continue;
+		if (cur.contains(".lnk"))
+			continue;
 		indexIE(dir + "/" + dirs[i],items);
 	}	
 
 	QStringList files = qd.entryList(QStringList("*.url"), QDir::Files, QDir::Unsorted);
-	for(int i = 0; i < files.count(); ++i) {
+	for (int i = 0; i < files.count(); ++i)
+	{
 		items->push_back(CatItem(dir + "/" + files[i], files[i].mid(0,files[i].size()-4)));
 	}
 }
+
 #endif
+
 
 QString WebyPlugin::getFirefoxPath()
 {
 	QString path;
-	QString iniPath;
-	QString appData;
 	QString osPath;
 
 #ifdef Q_WS_WIN
-	GetShellDir(CSIDL_APPDATA, appData);
-	osPath = appData + "/Mozilla/Firefox/";
+	osPath = GetShellDirectory(CSIDL_APPDATA) + "/Mozilla/Firefox/";
 #endif
 
 #ifdef Q_WS_X11
 	osPath = QDir::homePath() + "/.mozilla/firefox/";
 #endif
 
-	iniPath = osPath + "profiles.ini";
+#ifdef Q_WS_MAC
+        osPath = QDir::homePath() + "/Library/Application Support/Firefox/";
+#endif
+	QString iniPath = osPath + "profiles.ini";
 
 	QFile file(iniPath);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		return "";
 	bool isRel = false;
-	while (!file.atEnd()) {
+	while (!file.atEnd())
+	{
 		QString line = file.readLine();
-		if (line.contains("IsRelative")) {
+		if (line.contains("IsRelative"))
+		{
 			QStringList spl = line.split("=");
-			isRel = spl[1].toInt();
+			isRel = spl[1].toInt() != 0;
 		}
-		if (line.contains("Path")) {
+		if (line.contains("Path"))
+		{
 			QStringList spl = line.split("=");
 			if (isRel)
-				path = osPath + spl[1].mid(0,spl[1].count()-1) + "/bookmarks.html" ;
-			else
-				path = spl[1].mid(0,spl[1].count()-1);
+				path = osPath;
+			path += spl[1].mid(0,spl[1].count()-1) + "/bookmarks.html";
 			break;
 		}
-	} 	
+	}
 
 	return path;
 }
+
 
 QString WebyPlugin::getIcon()
 {
 	return libPath + "/icons/weby.png";
 }
+
 
 void WebyPlugin::indexFirefox(QString path, QList<CatItem>* items)
 {
@@ -308,41 +409,42 @@ void WebyPlugin::indexFirefox(QString path, QList<CatItem>* items)
 	QRegExp regex_shortcut("SHORTCUTURL=\"([^\"]*)\"");
 	QRegExp regex_postdata("POST_DATA", Qt::CaseInsensitive);
 
-	while (!file.atEnd()) {
+	while (!file.atEnd())
+	{
 		QString line = QString::fromUtf8(file.readLine());
-		if (regex_url.indexIn(line) != -1) {
+		if (regex_url.indexIn(line) != -1)
+		{
 			Bookmark mark;
 			mark.url = regex_url.cap(1);
 
-			if (regex_urlname.indexIn(line) != -1) {
+			if (regex_urlname.indexIn(line) != -1)
+			{
 				mark.name = regex_urlname.cap(1);
 
-				if (regex_postdata.indexIn(line) != -1) continue;
-				if (regex_shortcut.indexIn(line) != -1) {
+				if (regex_postdata.indexIn(line) != -1)
+					continue;
+				if (regex_shortcut.indexIn(line) != -1)
+				{
 					mark.shortcut = regex_shortcut.cap(1);
 					marks.push_back(mark);
 					items->push_back(CatItem(mark.url + ".shortcut", mark.shortcut, HASH_WEBY, getIcon()));
-				} else {
+				}
+				else
+				{
 					items->push_back(CatItem(mark.url, mark.name, 0, getIcon()));
-				}	
-			}			
+				}
+			}
 		}
 	}
 }
 
 
-/*
-QString string = fileName();//fileName() returns a chinese filename
-QTextCodec* gbk_codec = QTextCodec::codecForName("GB2312");
-QString gbk_string = gbk_codec->toUnicode(string);
-QLabel *label = new QLabel(gbk_string);
-*/
-
-
-WebySite WebyPlugin::getDefault() 
+WebySite WebyPlugin::getDefault()
 {
-	foreach(WebySite site, sites) {
-		if (site.def) {
+	foreach(WebySite site, sites)
+	{
+		if (site.def)
+		{
 			return site;
 		}
 	}
@@ -352,94 +454,121 @@ WebySite WebyPlugin::getDefault()
 
 void WebyPlugin::getCatalog(QList<CatItem>* items)
 {
-	foreach(WebySite site, sites) {
-		items->push_back(CatItem(site.name + ".weby", site.name, HASH_WEBY, getIcon()));
+	foreach(WebySite site, sites)
+	{
+		QString iconName = iconCache->getIconPath(site.query);
+		items->push_back(CatItem(site.name + ".weby", site.name, HASH_WEBY,
+			iconName.length() > 0 ? iconName : getIcon()));
 	}
 
 #ifdef Q_WS_WIN
-	if ((*settings)->value("weby/ie", true).toBool()) {
-		QString path;
-		GetShellDir(CSIDL_FAVORITES, path);
+	if ((*settings)->value("weby/ie", true).toBool())
+	{
+		QString path = GetShellDirectory(CSIDL_FAVORITES);
 		indexIE(path, items);
 	}
 #endif
-	if ((*settings)->value("weby/firefox", true).toBool()) {
+	if ((*settings)->value("weby/firefox", true).toBool())
+	{
 		QString path = getFirefoxPath();
 		indexFirefox(path, items);
 	}
 }
 
-void WebyPlugin::launchItem(QList<InputData>* id, CatItem* item)
+
+void WebyPlugin::launchItem(QList<InputData>* inputData, CatItem* item)
 {
 	QString file = "";
-	QString args = "";
-
-
-	//	if (id->count() == 2) {
-	    args = id->last().getText();
-	    args = QUrl::toPercentEncoding(args);
-	    item = &id->first().getTopResult();
-	    //	}
-
-	    //	    qDebug() << args;
-
-
-
-     
+	QStringList args;
+	
+	int i = inputData->count() == 1 && inputData->first().hasLabel(HASH_DEFAULTSEARCH) ? 0 : 1;
+	for (; i < inputData->count(); i++)
+	{
+		QString txt = inputData->at(i).getText();
+		txt = QUrl::toPercentEncoding(txt);
+		args.push_back(txt);
+	}
 
 	// Is it a Firefox shortcut?
-	if (item->fullPath.contains(".shortcut")) {
+	if (item->fullPath.contains(".shortcut"))
+	{
 		file = item->fullPath.mid(0, item->fullPath.count()-9);
-		file.replace("%s", args);
+		file.replace("%s",args[0]);
 	}
-	else { // It's a user-specific site
+	else
+	{
+		// It's a user-specific site
 		bool found = false;
-		foreach(WebySite site, sites) {
-			if (item->shortName == site.name) {
+		foreach(WebySite site, sites)
+		{
+			if (item->shortName == site.name)
+			{
 				found = true;
-				file = site.base;
-				if (args != "") {
-					QString tmp = site.query;
-					tmp.replace("%s", args);
-					file += tmp;
+				file = site.query;
+				if (args.count() == 0)
+				{
+					// if no addition parameters have been entered and the weby URL has placeholders to take parameters,
+					// strip the URL down to its root and launch that
+					if (file.contains("%1"))
+					{
+						QRegExp regex("^(([a-z]*://)?([^/]*))");
+						if (regex.indexIn(file) != -1)
+						{
+							file = regex.cap(0);
+						}
+					}
+				}
+				else
+				{
+					// Fill additional parameter placeholders
+					for (int i = 0; i < args.size(); i++)
+						file = file.arg(args[i]);
 				}
 				break;
 			}
 		}
 
-		if (!found) {
-			file = item->shortName;	
-			if (!file.contains("http://")) {
+		if (!found)
+		{
+			file = item->shortName;
+			// Make sure we have a protocol
+			if (!file.startsWith("http://") && !file.startsWith("https://") && !file.startsWith("ftp://"))
+			{
 				file = "http://" + file;
 			}
 		}
 	}
-	//	file = file.replace("#", "%23");
+
 	QUrl url(file);
-	//	runProgram(url.toEncoded(), "");
 	runProgram(url.toString(), "");
 }
 
-void WebyPlugin::doDialog(QWidget* parent, QWidget** newDlg) {
-	if (gui != NULL) return;
-	gui = new Gui(parent);
-	*newDlg = gui;
+
+void WebyPlugin::doDialog(QWidget* parent, QWidget** newDlg)
+{
+	if (gui != NULL)
+		return;
+	gui.reset(new Gui(parent));
+	*newDlg = gui.get();
 }
 
-void WebyPlugin::endDialog(bool accept) {
-	if (accept) {
+
+void WebyPlugin::endDialog(bool accept)
+{
+	if (accept)
+	{
 		gui->writeOptions();
 		init();
 	}
-	if (gui != NULL) 
-		delete gui;
-
-	gui = NULL;
+	gui.reset();
 }
 
-void WebyPlugin::setPath(QString * path) {
+
+void WebyPlugin::setPath(QString * path)
+{
 	libPath = *path;
 }
+
 
 int WebyPlugin::msg(int msgId, void* wParam, void* lParam)
 {
@@ -481,7 +610,7 @@ int WebyPlugin::msg(int msgId, void* wParam, void* lParam)
 		doDialog((QWidget*) wParam, (QWidget**) lParam);
 		break;
 	case MSG_END_DIALOG:
-		endDialog((bool) wParam);
+		endDialog(wParam != 0);
 		break;
 	case MSG_PATH:
 		setPath((QString *) wParam);
@@ -492,4 +621,4 @@ int WebyPlugin::msg(int msgId, void* wParam, void* lParam)
 	return handled;
 }
 
-Q_EXPORT_PLUGIN2(weby, WebyPlugin) 
+Q_EXPORT_PLUGIN2(weby, WebyPlugin)

@@ -19,8 +19,7 @@
  */
 
 
-
-#include <QCoreApplication>
+#include "precompiled.h"
 #include "platform_base_hotkey.h"
 #include "platform_base_hottrigger.h"
 
@@ -38,7 +37,7 @@ GlobalShortcutManager::~GlobalShortcutManager()
         clear();
 }
 
-GlobalShortcutManager* GlobalShortcutManager::instance_ = 0;
+GlobalShortcutManager* GlobalShortcutManager::instance_;
 
 /**
  * \brief Returns the instance of GlobalShortcutManager.

@@ -1,6 +1,6 @@
 /*
 Launchy: Application Launcher
-Copyright (C) 2007  Josh Karlin
+Copyright (C) 2007-2009  Josh Karlin, Simon Capewell
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,52 +21,33 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define OPTIONS_H
 
 #include "ui_options.h"
-#include <QString>
-#include <QStringList>
-#include <QList>
+#include "FileBrowserDelegate.h"
+#include "Directory.h"
 
-struct Directory {
-	Directory() 
-		: indexDirs(false), indexExe(false), depth(100)
-	{
-	
-	}
-    Directory(QString n, QStringList t, bool d, bool e, int dep) 
-    :  indexDirs(d), indexExe(e), name(n), types(t), depth(dep) {}
-	bool indexDirs;
-	bool indexExe;
-	QString name;
-	QStringList types;
-	int depth;
-};
 
-class OptionsDlg : public QDialog, private Ui::OptionsDlg
+class OptionsDialog : public QDialog, private Ui::OptionsDlg
 {
   Q_OBJECT
 
-private:
-	int curPlugin;
-
 public:
+	OptionsDialog(QWidget* parent = 0);
+	~OptionsDialog();
 
-QStringList metaKeys;
-QStringList actionKeys;
-QList<int> iMetaKeys;
-QList<int> iActionKeys;
-OptionsDlg(QWidget* parent = 0);
-~OptionsDlg();
-QList<Directory> memDirs;
-QList<QPair<QString, uint> > pluginNames;
-QVBoxLayout* pluginLayout;
- QString lastDir;
+    virtual void setVisible(bool visible);
 
 public slots:
 	void accept();
 	void reject();
-	void skinChanged(const QString);
-	void dirChanged(int row);
+	void autoUpdateCheckChanged(int state);
+	void tabChanged(int tab);
+	void skinChanged(const QString& newSkin);
+	void dirRowChanged(int row);
+	void catDirItemChanged(QListWidgetItem* item);
+	void catDirDragEnter(QDragEnterEvent *event);
+	void catDirDrop(QDropEvent *event);
 	void catDirPlusClicked(bool c);
 	void catDirMinusClicked(bool c);
+	void catTypesItemChanged(QListWidgetItem* item);
 	void catTypesPlusClicked(bool c);
 	void catTypesMinusClicked(bool c);
 	void catTypesDirChanged(int);
@@ -77,8 +58,27 @@ public slots:
 	void catRescanClicked(bool);
 	void pluginChanged(int row);
 	void pluginItemChanged(QListWidgetItem* state);
-	void tabChanged(int tab);
-	void catDirTextChanged(QListWidgetItem * item );
+
+private:
+	void addDirectory(const QString& directory);
+	void saveCatalogOptions();
+
+private:
+	FileBrowserDelegate directoryItemDelegate;
+	int curPlugin;
+	bool needRescan;
+	QStringList metaKeys;
+	QStringList actionKeys;
+	QList<int> iMetaKeys;
+	QList<int> iActionKeys;
+	QList<Directory> memDirs;
+	QList<QPair<QString, uint> > pluginNames;
+	QVBoxLayout* pluginLayout;
+	QString lastDir;
+
+	static QByteArray windowGeometry;
+	static int currentTab;
+	static int currentPlugin;
 };
 
 

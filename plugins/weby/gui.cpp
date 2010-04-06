@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include "precompiled.h"
 #include "gui.h"
 #include "weby.h"
-#include <QHeaderView>
 
 #define ROW_PADDING 6
 
@@ -32,25 +32,20 @@ Gui::Gui(QWidget* parent)
 	if (settings == NULL) return;
 	booksFirefox->setChecked(settings->value("weby/firefox", true).toBool());
 	booksIE->setChecked(settings->value("weby/ie", true).toBool());
-	
-
 
 	// Stretch the last column of the table
-	table->horizontalHeader()->setStretchLastSection(true);
-//	table->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch); //  column 0
+	table->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch); //  column 1
 
 	// Read in the array of websites from options
 	table->setSortingEnabled(false);
 	int count = settings->beginReadArray("weby/sites");
 	table->setRowCount(count);
 
-
-
 	for(int i = 0; i < count; ++i) {
 		settings->setArrayIndex(i);
 		table->setItem(i, 0, new QTableWidgetItem(settings->value("name").toString()));
-		table->setItem(i, 1, new QTableWidgetItem(settings->value("base").toString()));
-		table->setItem(i, 2, new QTableWidgetItem(settings->value("query").toString()));
+		table->setItem(i, 1, new QTableWidgetItem(settings->value("query").toString()));
+		//table->setItem(i, 2, new QTableWidgetItem(settings->value("suggest").toString()));
 		bool isDef = settings->value("default",false).toBool();
 		if (isDef) {
 		    defaultName = settings->value("name").toString();
@@ -62,11 +57,12 @@ Gui::Gui(QWidget* parent)
 	settings->endArray();
 	table->setSortingEnabled(true);
 
-
-
+	connect(table, SIGNAL(dragEnter(QDragEnterEvent*)), this, SLOT(dragEnter(QDragEnterEvent*)));
+	connect(table, SIGNAL(drop(QDropEvent*)), this, SLOT(drop(QDropEvent*)));
 	connect(tableNew, SIGNAL(clicked(bool)), this, SLOT(newRow(void)));
 	connect(tableRemove, SIGNAL(clicked(bool)), this, SLOT(remRow(void)));
 	connect(pushDefault, SIGNAL(clicked(bool)), this, SLOT(makeDefault(void)));
+	connect(pushClearDefault, SIGNAL(clicked(bool)), this, SLOT(clearDefault(void)));
 }
 
 void Gui::writeOptions()
@@ -82,11 +78,8 @@ void Gui::writeOptions()
 		if (table->item(i,0)->text() == "" || table->item(i,1)->text() == "") continue;
 		settings->setArrayIndex(i);
 		settings->setValue("name", table->item(i, 0)->text());
-		settings->setValue("base", table->item(i, 1)->text());
-		if (table->item(i,2) == NULL)
-			settings->setValue("query", "");
-		else
-			settings->setValue("query", table->item(i, 2)->text());		
+		settings->setValue("query", table->item(i, 1)->text());
+		//settings->setValue("suggest", table->item(i, 2)->text());	
 		if (table->item(i,0)->text() == defaultName)
 		    settings->setValue("default", true);
 		else
@@ -98,23 +91,85 @@ void Gui::writeOptions()
 
 void Gui::newRow() 
 {
-	table->insertRow(table->rowCount());
-	table->setCurrentCell(table->rowCount()-1, 0);
+	bool sort = table->isSortingEnabled();
+	if (sort)
+		table->setSortingEnabled(false);
+	int row = table->rowCount();
+	table->insertRow(row);
+	table->setItem(row, 0, new QTableWidgetItem());
+	table->setItem(row, 1, new QTableWidgetItem());
+	table->setItem(row, 2, new QTableWidgetItem());
+	table->setItem(row, 3, new QTableWidgetItem());
 	table->verticalHeader()->resizeSection(table->rowCount()-1, table->verticalHeader()->fontMetrics().height() + ROW_PADDING);
+	table->setCurrentCell(table->rowCount()-1, 0);
+	table->editItem(table->currentItem());
+	table->setSortingEnabled(sort);
 }
 
 void Gui::remRow()
 {
-	if (table->currentRow() != -1)
-		table->removeRow(table->currentRow());
+	int row = table->currentRow();
+	if (row != -1)
+	{
+		table->removeRow(row);
+		if (row >= table->rowCount())
+			row = table->rowCount() - 1;
+		table->setCurrentCell(row, table->currentColumn());
+	}
+}
+
+void Gui::dragEnter(QDragEnterEvent *event)
+{
+	const QMimeData* mimeData = event->mimeData();
+	if (mimeData && (mimeData->hasUrls() || mimeData->hasText()))
+		event->acceptProposedAction();
+}
+
+void Gui::drop(QDropEvent *event)
+{
+	const QMimeData* mimeData = event->mimeData();
+	if (mimeData) {
+		if (mimeData->hasUrls()) {
+			foreach(QUrl url, mimeData->urls()) {
+				table->setSortingEnabled(false);
+				QString qs = QUrl::fromPercentEncoding(url.encodedQuery());
+				appendRow(url.path() ,qs);
+//				appendRow(url.path(), url.toString(QUrl::RemoveQuery), qs);
+				table->setCurrentCell(table->rowCount()-1, 0);
+				table->setSortingEnabled(true);
+			}
+		}
+		else if (mimeData->hasText()) {
+			table->setSortingEnabled(false);
+			appendRow(mimeData->text(), "");
+			table->setCurrentCell(table->rowCount()-1, 0);
+			table->setSortingEnabled(true);
+		}
+	}
 }
 
 void Gui::makeDefault()
 {
     int row = table->currentRow();
-    if (row == -1)
+    if (row > -1)
+	{
+		defaultName = table->item(row,0)->text();
+		label_default->setText(defaultName);
+	}
+}
+
+void Gui::clearDefault()
+{
 	defaultName = "";
-    else
-	defaultName = table->item(row,0)->text();
     label_default->setText(defaultName);
+}
+
+void Gui::appendRow(const QString& name, const QString& path)
+{
+	int row = table->rowCount();
+	table->insertRow(row);
+	table->setItem(row, 0, new QTableWidgetItem(name));
+	table->setItem(row, 1, new QTableWidgetItem(path));
+	table->setItem(row, 2, new QTableWidgetItem());
+	table->verticalHeader()->resizeSection(row, table->verticalHeader()->fontMetrics().height() + ROW_PADDING);
 }

@@ -1,6 +1,6 @@
 /*
 Launchy: Application Launcher
-Copyright (C) 2007  Josh Karlin
+Copyright (C) 2007-2009  Josh Karlin
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,41 +19,45 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef CATALOG_BUILDER
 #define CATALOG_BUILDER
+
+
+#include <QThread>
+#include <boost/shared_ptr.hpp>
 #include "catalog_types.h"
 #include "plugin_handler.h"
-#include <QThread>
 
-class CatBuilder : public QThread
+
+using namespace boost;
+
+
+class CatalogBuilder : public QThread
 {
 	Q_OBJECT
 
-private:
-
-	Catalog* curcat;
-	PluginHandler* plugins;
-	bool buildFromStorage;
-	Catalog* cat;
-	QHash<QString, bool> indexed;
-
 public:
-	bool loadCatalog(QString);
-	void storeCatalog(QString);
-	void buildCatalog();
-	void indexDirectory(QString dir, QStringList filters, bool fdirs, bool fbin, int depth);
-	void setPreviousCatalog(Catalog* cata) {
-		curcat = cata;
+	CatalogBuilder(PluginHandler* plugs);
+	CatalogBuilder(PluginHandler* plugs, shared_ptr<Catalog> catalog);
+	static Catalog* createCatalog();
+
+	shared_ptr<Catalog> getCatalog()
+	{
+		return catalog;
 	}
-
-
-	Catalog* getCatalog() { return cat; }
-	CatBuilder(bool fromArchive, PluginHandler* plugs);
-	CatBuilder(Catalog* catalog, PluginHandler* plugs) : plugins(plugs), buildFromStorage(false), cat(catalog) {}
 	void run();
 
 signals:
 	void catalogFinished();
 	void catalogIncrement(float);
 
+private:
+	void buildCatalog();
+	void indexDirectory(const QString& dir, const QStringList& filters, bool fdirs, bool fbin, int depth);
+
+	PluginHandler* plugins;
+	shared_ptr<Catalog> currentCatalog;
+	shared_ptr<Catalog> catalog;
+	QHash<QString, bool> indexed;
 };
+
 
 #endif

@@ -1,6 +1,6 @@
 /*
 Launchy: Application Launcher
-Copyright (C) 2007  Josh Karlin
+Copyright (C) 2007-2009  Josh Karlin
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -25,27 +25,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <QSettings>
 #include "catalog.h"
 
-#ifdef Q_WS_WIN
-#define VC_EXTRALEAN
-#ifndef WINVER
-#define WINVER 0x05100
-#define _WIN32_WINNT 0x0510	
-#define _WIN32_WINDOWS 0x0510 
-#define _WIN32_IE 0x0600
-#endif
-
-#include <windows.h>
-#include <shlobj.h>
-#endif
-
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-
 #define DESKTOP_WINDOWS 0
 #define DESKTOP_GNOME 1
 #define DESKTOP_KDE 2
+#define DESKTOP_MAC 3
 
 /**
 	\brief This message asks the Plugin for its ID Number.
@@ -488,6 +471,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MSG_CONTROL_OPTIONS 500
 #define MSG_CONTROL_EXIT 501
 #define MSG_CONTROL_REBUILD 502
+#define MSG_CONTROL_RELOADSKIN 503
+#define MSG_CONTROL_LAUNCHITEM 504
+
 
 /**
 	\brief This is the class that a plugin must implement.

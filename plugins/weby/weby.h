@@ -19,12 +19,38 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef WEBY_H
 #define WEBY_H
-#include "gui.h"
-#include "globals.h"
 
+
+#include "precompiled.h"
 #include "plugin_interface.h"
+#include "globals.h"
+#include "gui.h"
+#include "IconCache.h"
 
 
+class Suggest : public QObject
+{
+	Q_OBJECT
+public:
+	Suggest();
+	void run(QString url, QString query);
+
+	QStringList results;
+
+public slots:
+	void httpGetFinished(bool error);
+
+private:
+	QString query;
+	QHttp http;
+	QEventLoop loop;
+	int id;
+	static int currentId;	
+
+};
+
+
+using namespace boost;
 
 class WebyPlugin : public QObject, public PluginInterface
 {
@@ -34,17 +60,22 @@ class WebyPlugin : public QObject, public PluginInterface
 
 public:
 	uint HASH_WEBSITE;
+	uint HASH_DEFAULTSEARCH;
 	uint HASH_WEBY;
 	QList<WebySite> sites;
 	QList<Bookmark> marks;
 
 private:
-	Gui* gui;
+	shared_ptr<Gui> gui;
+	QString iconCachePath;
+	IconCache* iconCache;
 public:
 	QString libPath;
 	WebyPlugin() {
-		gui = NULL;
+//		gui = NULL;
+
 		HASH_WEBSITE = qHash(QString("website"));
+		HASH_DEFAULTSEARCH = qHash(QString("defaultsearch"));
 		HASH_WEBY = qHash(QString("weby"));
 	}
 	~WebyPlugin() {}
@@ -53,9 +84,9 @@ public:
 	void getLabels(QList<InputData>*);
 	void getID(uint*);
 	void getName(QString*);
-	void getResults(QList<InputData>* id, QList<CatItem>* results);
+	void getResults(QList<InputData>* inputData, QList<CatItem>* results);
 	void getCatalog(QList<CatItem>* items);
-	void launchItem(QList<InputData>*, CatItem*);
+	void launchItem(QList<InputData>* inputData, CatItem*);
 	void doDialog(QWidget* parent, QWidget**);
 	void endDialog(bool accept);
 	WebySite getDefault();

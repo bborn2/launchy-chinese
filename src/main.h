@@ -1,6 +1,6 @@
 /*
 Launchy: Application Launcher
-Copyright (C) 2007  Josh Karlin
+Copyright (C) 2007-2010  Josh Karlin, Simon Capewell
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,240 +21,162 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MAIN_H
 
 
-
-#include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QListWidget>
-#include <QString>
-#include <QtNetwork/QHttp>
-#include <QBuffer>
-#include <QKeyEvent>
-#include <QScrollBar>
 #include "plugin_handler.h"
 #include "platform_util.h"
 #include "catalog.h"
 #include "catalog_builder.h"
 #include "icon_delegate.h"
+#include "icon_extractor.h"
 #include "globals.h"
+#include "InputDataList.h"
+#include "CommandHistory.h"
+#include "CharLineEdit.h"
+#include "LineEditMenu.h"
+#include "CharListWidget.h"
+#include "AnimationLabel.h"
+#include "Fader.h"
 
 
+using namespace boost;
 
 
-
-class QLineEditMenu : public QLineEdit
+enum CommandFlag
 {
-	Q_OBJECT
-public:
-	QLineEditMenu(QWidget* parent = 0) :
-    QLineEdit(parent) {setAttribute(Qt::WA_InputMethodEnabled);}
-	void contextMenuEvent(QContextMenuEvent *evt) {
-		emit menuEvent(evt);
-	}
-signals:
-	void menuEvent(QContextMenuEvent*);
+	None = 0,
+	ShowLaunchy = 1,
+	ShowOptions = 2,
+	ResetPosition = 4,
+	ResetSkin = 8,
+	Rescan = 16,
+	Exit = 32
 };
 
-class QCharLineEdit : public QLineEdit
-{
-	Q_OBJECT
-public:
-	QCharLineEdit(QWidget* parent = 0) : 
-		QLineEdit(parent) 
-		{
-		    setAttribute(Qt::WA_InputMethodEnabled);
-		}
-		void keyPressEvent(QKeyEvent* key) {
-			QLineEdit::keyPressEvent(key);
-			emit keyPressed(key);
-		}
-		// This is how you pick up the tab key
-		bool focusNextPrevChild(bool next) {
-			next = next; // Remove compiler warning
-			QKeyEvent key(QEvent::KeyPress, Qt::Key_Tab, NULL);
-			emit keyPressed(&key);
-			return true;
-		}
-		void focusOutEvent ( QFocusEvent * evt) {
-			emit focusOut(evt);
-		}
+Q_DECLARE_FLAGS(CommandFlags, CommandFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(CommandFlags)
 
-		void inputMethodEvent(QInputMethodEvent *e) {
-			QLineEdit::inputMethodEvent(e);
-			if (e->commitString() != "") {
-				emit inputMethod(e);
-			}
-		}
-		/*
-		void mouseReleaseEvent(QMouseEvent* e)
-			{
-				if (event->button() & RightButton) {
-					QContextMenuEvent
-					emit contextMenuEvent
-				}
-			}
-			*/
-signals:
-	void keyPressed(QKeyEvent*);
-	void focusOut(QFocusEvent* evt);
-	void inputMethod(QInputMethodEvent *e);
-};
 
-class QCharListWidget : public QListWidget
-{
-	Q_OBJECT
-public:
-    QCharListWidget(QWidget* parent = 0) : 
-    QListWidget(NULL)
-		{
-		    parent = parent; // warning
-		    #ifdef Q_WS_X11
-		    setWindowFlags( windowFlags() |   Qt::Tool | Qt::SplashScreen);
-		    #endif
-			setAttribute(Qt::WA_AlwaysShowToolTips);
-			
-			setAlternatingRowColors(true);
-		}
-		void keyPressEvent(QKeyEvent* key) {
-			emit keyPressed(key);
-			QListWidget::keyPressEvent(key);
-			key->ignore();
-		}
-		void mouseDoubleClickEvent( QMouseEvent * event  ) {
-			event = event; // Remove compiler warning
-			QKeyEvent key(QEvent::KeyPress, Qt::Key_Enter, NULL);
-			emit keyPressed(&key);
-		}
-		void focusOutEvent ( QFocusEvent * evt) {
-			emit focusOut(evt);
-		}
-
-signals:
-	void keyPressed(QKeyEvent*);
-	void focusOut(QFocusEvent* evt);
-};
-
-class Fader : public QThread
-{
-	Q_OBJECT
-private:
-	bool keepRunning;
-	bool fadeType;
-public:
-	Fader(QObject* parent = NULL)
-		: QThread(parent), keepRunning(true) {}
-	~Fader() {}
-	void stop() { keepRunning = false; }
-	void run();
-	void fadeIn();
-	void fadeOut();
-	void setFadeType(bool type) { fadeType = type; }
-signals:
-	void fadeLevel(double);
-	void finishedFade(double);
-};
-
-class MyWidget : public QWidget
+class LaunchyWidget : public QWidget
 {
 	Q_OBJECT  // Enable signals and slots
+
 public:
+	LaunchyWidget(CommandFlags command);
+	~LaunchyWidget();
 
+	void executeStartupCommand(int command);
 
-    MyWidget() {};
-    MyWidget(QWidget *parent, PlatformBase*, bool rescue );
-	~MyWidget();
+	shared_ptr<Catalog> catalog;
+	PluginHandler plugins;
 
-	QHash<QString, QList<QString> > dirs;
+	void showLaunchy(bool noFade);
+	void showTrayIcon();
+
+	void setSuggestionListMode(int mode);
+	bool setHotkey(QKeySequence);
+	bool setAlwaysShow(bool);
+	bool setAlwaysTop(bool);
+	void setSkin(const QString& name);
+	void loadOptions();
+	int getHotkey() const;
+
+protected:
+    void paintEvent(QPaintEvent* event);
+
+public slots:
+    void focusInEvent(QFocusEvent* event);
+	void focusOutEvent(QFocusEvent* event);
+	void mousePressEvent(QMouseEvent* event);
+	void mouseMoveEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
+	void contextMenuEvent(QContextMenuEvent* event);
+	void showOptionsDialog();
+	void onHotkey();
+	void updateTimeout();
+	void dropTimeout();
+	void setOpaqueness(int level);
+	void httpGetFinished(bool result);
+	void catalogProgressUpdated(float);
+	void catalogBuilt();
+	void inputMethodEvent(QInputMethodEvent* event);
+	void keyPressEvent(QKeyEvent* event);
+	void inputKeyPressEvent(QKeyEvent* event);
+	void alternativesRowChanged(int index);
+	void alternativesKeyPressEvent(QKeyEvent* event);
+	void setFadeLevel(double level);
+	void showLaunchy();
+	void buildCatalog();
+	void iconExtracted(int itemIndex, QIcon icon);
+	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+        void reloadSkin();
+private:
+	void createActions();
+	void applySkin(const QString& name);
+	void closeEvent(QCloseEvent* event);
+	void hideLaunchy(bool noFade = false);
+	void updateVersion(int oldVersion);
+	void checkForUpdate();
+	void shouldDonate();
+	void showAlternatives(bool show = true, bool resetSelection = true);
+	void parseInput(const QString& text);
+	void updateOutputWidgets(bool resetAlternativesSelection = true);
+	void searchOnInput();
+	void loadPosition(QPoint pt);
+	void savePosition() { gSettings->setValue("Display/pos", pos()); }
+	void doTab();
+	void doBackTab();
+	void doEnter();
+	void processKey();
+	void launchItem(CatItem& item);
+	void addToHistory(QList<InputData>& item);
+	void startDropTimer();
+
+        QString currentSkin;
+
 	Fader* fader;
-	QPoint moveStartPoint;
-	PlatformBase * platform;	
-	QLabel* label;
-	QLineEditMenu *output;
-	QCharLineEdit *input;
+	QPixmap* frameGraphic;
+	QSystemTrayIcon* trayIcon;
+	CharLineEdit* input;
+	QLabel* output;
+	QLabel* outputIcon;
+	CharListWidget* alternatives;
+	QRect alternativesRect;
+	QPushButton* optionsButton;
+	QPushButton* closeButton;
+	QScrollBar* altScroll;
+	QLabel* alternativesPath;
+	AnimationLabel* workingAnimation;
+
+	QAction* actShow;
+	QAction* actRebuild;
+    QAction* actReloadSkin;
+	QAction* actOptions;
+	QAction* actExit;
+
 	QTimer* updateTimer;
 	QTimer* dropTimer;
-	QCharListWidget *alternatives;
-	QPushButton *opsButton;
-	QPushButton *closeButton;
-	QRect altRect;
-	QLabel * licon;
-
-
-	QScrollBar* altScroll;
-	Catalog* catalog;
-	CatBuilder* catBuilder;
+	shared_ptr<CatalogBuilder> catalogBuilder;
+	IconExtractor iconExtractor;
+	QIcon* condensedTempIcon;
 	QList<CatItem> searchResults;
-	QList<InputData> inputData;
-	PluginHandler plugins;
-	bool visible;
+	InputDataList inputData;
+	CommandHistory history;
 	bool alwaysShowLaunchy;
+	bool dragging;
+	QPoint dragStartPoint;
 	bool menuOpen;
 	bool optionsOpen;
 
 	IconDelegate* listDelegate;
-	QAbstractItemDelegate * defaultDelegate;
+	QAbstractItemDelegate* defaultListDelegate;
 
-	void connectAlpha();
-	QIcon getIcon(CatItem & item);
-	void MoveFromAlpha(QPoint pos);
-	void applySkin(QString);
-	void contextMenuEvent(QContextMenuEvent *event);
-	void closeEvent(QCloseEvent *event);
-	void showLaunchy(bool now = false);
-	void hideLaunchy(bool now = false);
-	void updateVersion(int oldVersion);
-	void checkForUpdate();
-	void shouldDonate();
-	void setCondensed(int condensed);
-	bool setHotkey(int, int);
-	void showAlternatives(bool show=true);
-	void launchObject();
-	void searchFiles(const QString & input, QList<CatItem>& searchResults);
-	void parseInput(QString text);
-	void resetLaunchy();
-	void applySkin2(QString directory);
-	void updateDisplay();
-	void searchOnInput();
-	void fadeIn();
-	void fadeOut();
-//	QPair<double,double> relativePos();
-//	QPoint absolutePos(QPair<double,double> relPos);
-	QPoint loadPosition();
-	void savePosition() { gSettings->setValue("Display/pos", pos()); }
-	void doTab();
-	void doEnter();
-	QChar sepChar();
-	QString printInput();
-	void processKey();
-
-private:
-    QHttp *http;
-    QBuffer *verBuffer;
+	QHttp *http;
+	QBuffer *verBuffer;
 	QBuffer *counterBuffer;
-
-public slots:
-	void menuOptions();
-	void onHotKey();
-	void updateTimeout();
-	void dropTimeout();
-	void setAlwaysShow(bool);
-	void setAlwaysTop(bool);
-	void setPortable(bool);
-	void mousePressEvent(QMouseEvent *e);
-	void mouseMoveEvent(QMouseEvent *e);
-	void setSkin(QString, QString);
-	void httpGetFinished(bool result);
-	void catalogBuilt();
-	void inputMethodEvent(QInputMethodEvent* e);
-	void keyPressEvent(QKeyEvent*);
-	void inputKeyPressEvent(QKeyEvent* key);
-	void altKeyPressEvent(QKeyEvent* key);
-	void focusOutEvent(QFocusEvent* evt);
-	void setOpaqueness(int val);
-	void setFadeLevel(double);
-	void finishedFade(double d);
-	void menuEvent(QContextMenuEvent*);
-	void buildCatalog();
 };
 
+
+LaunchyWidget* createLaunchyWidget(CommandFlags command);
+
+//from convertKeySequence
+bool isDoubleHotkey(QKeySequence ks, UINT* mod_);
 #endif
