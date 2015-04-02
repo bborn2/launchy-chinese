@@ -1,6 +1,8 @@
 # launchy2 中文修改版
 Launchy是一个开源的windows程序，它设计用来快速启动你的程序，让你忘记掉那一长串的开始菜单，乱七八糟的桌面图标，甚至它可以作为你的文件管理器。
 
+## [下载最新版本 2.5](https://github.com/bborn2/launchy-chinese/raw/master/Launchy2.5zh_build20100408.exe)
+
 launchy会扫描你的开始菜单，你只需要敲几个字母就可以打开你的程序，文档，书签......
 ## 这不是launchy的官方网站
  _launchy是我非常喜欢的一个开源项目，这个版本基于launchy2.0。我增加了中文的语言包和两个新功能。_
