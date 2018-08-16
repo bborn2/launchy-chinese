@@ -24,8 +24,7 @@ launchy会扫描你的开始菜单，你只需要敲几个字母就可以打开�
  因为qt运行时环境的不同, 可能和其他的launchy插件不兼容,需要重新编译
 
  如果想使用英文原版程序,又想使用中文界面,则下载"launchy_zh.qm"即可,将其放到安装目录下的"tr"目录下即可.
-
- 更多请看这里 http://fangfangtu.com/blog/2010/04/launchy25
+ 
  
  2010.4.8第二次编译,修改插件的编译属性,解决在win7下可能会crash的问题
 
@@ -35,14 +34,13 @@ launchy会扫描你的开始菜单，你只需要敲几个字母就可以打开�
  修复了不支持官方插件的bug
 
  支持汉字的多音字和全拼
-
- 更多请看这里 http://bborn.cn/blog/2008/11/launchy212
+ 
 
 
 -------------------------------------------
 ### 这里下载 http://code.google.com/p/launchy-chinese/downloads/list
 ### launchy的官方网站 http://launchy.sf.net
-### 我的blog  http://fangfangtu.com/blog 或者 http://bborn.cn/blog
+
 
 ### 使用方法 
 launchy会在启动的时候扫描你指定的目录，建立索引，这样，当你需要启动程序的时候，只要敲入程序名就可以，比如"photoshop"，甚至"ps"也可以。也许第一次它显示的并不是你想要的，但是当你选择后，它就会记住正确的答案。
@@ -67,4 +65,3 @@ Launchy indexes the programs in your start menu and can launch your documents, p
 
 
 ### the official website of launchy http://launchy.sf.net
-### my blog  http://bborn.cn/blog
